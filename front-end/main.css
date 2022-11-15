@@ -1,0 +1,56 @@
+h1 {
+    text-align: center;
+}
+
+#gridseatinfo {
+    text-align:center;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 1fr;
+    border:1px solid black;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+#window {
+    text-align:center;
+    border:1px solid black;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+#gridmap {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+}
+
+#studyroom {
+    writing-mode:vertical-lr;
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    border: 1px solid black;
+    margin-bottom: 20px;
+}
+#seats{
+    display:grid;
+    text-align: center;
+    grid-template-columns: 1fr 1fr;
+    margin-left: 50px;
+}
+#gridstateseat {
+    display: grid;
+    text-align: center;
+    border:1px solid black;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+#seatinfo{
+    
+}
+.seat {
+    border: 1px solid gray;
+    text-align: center;
+    margin: 5px;
+    margin-top: 20px;
+    margin-bottom:  20px;
+}
