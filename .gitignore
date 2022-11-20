@@ -1,1 +1,4 @@
 *.pth
+*.mp4
+
+/model/annotation_tool/path_output_frame/*

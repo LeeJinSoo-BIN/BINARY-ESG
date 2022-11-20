@@ -17,9 +17,9 @@ model = init_detector(config_file, checkpoint_file, device='cuda:0')  # or devic
 gc.collect()
 torch.cuda.empty_cache()
 import cv2
-img = cv2.imread('demo/demo2.jpg')
+img = cv2.imread('demo/demo3.png')
 
-result = inference_detector(model, 'demo/demo2.jpg')
+result = inference_detector(model, 'demo/demo3.png')
 
 img_ori = img.copy()
 colors = []
