@@ -1,4 +1,6 @@
+/model/annotation_tool/path_output_frame/*
+!/model/annotation_tool/path_output_frame
 *.pth
 *.mp4
 
-/model/annotation_tool/path_output_frame/*
+
