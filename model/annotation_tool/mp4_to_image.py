@@ -9,7 +9,7 @@ while 1:
   if not success :
     break
   if count % frame == 0 :
-    cv2.imwrite("./path_output_frame/%06d.png" % count, cv2.resize(image,(800,480)))            
+    cv2.imwrite("./path_output_frame/%06d.png" % count, cv2.resize(image,(640,640)))            
   count += 1
     
 
