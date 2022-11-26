@@ -329,7 +329,7 @@ class WindowClass(PyQt5.QtWidgets.QMainWindow, form_class):
             bbox = list()
             for anno in loaded_json["annotations"] :
                 #self.save_info[anno["id"]][1].append(anno)
-                self.save_info[anno["id"]].append(anno)
+                self.save_info[anno["image_id"]].append(anno)
 
             self.Label_box.load_rectangles(self.save_info[self.List_img.currentRow()])
             self.Label_box.update()
