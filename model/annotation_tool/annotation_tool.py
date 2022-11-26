@@ -313,6 +313,7 @@ class WindowClass(PyQt5.QtWidgets.QMainWindow, form_class):
         self.Label_message.setText(str(now).split('.')[0])
     def load_btn_click(self):
         tmp = PyQt5.QtWidgets.QFileDialog.getOpenFileName(self, "JSON 선택", filter = "JSON (*.json)")[0]
+        max_ann_id = 1
         if len(tmp) != 0 :
             with open(tmp, "r") as saved_json_dir:
 
@@ -330,9 +331,12 @@ class WindowClass(PyQt5.QtWidgets.QMainWindow, form_class):
             for anno in loaded_json["annotations"] :
                 #self.save_info[anno["id"]][1].append(anno)
                 self.save_info[anno["image_id"]].append(anno)
-
+                if max_ann_id < anno["id"] :
+                    max_ann_id = anno["id"]
             self.Label_box.load_rectangles(self.save_info[self.List_img.currentRow()])
             self.Label_box.update()
+            if self.Label_box.ann_ids < max_ann_id+1:
+                self.Label_box.ann_ids = max_ann_id+1
         
     
 
