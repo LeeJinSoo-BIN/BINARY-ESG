@@ -21,8 +21,8 @@ def resource_path(relative_path):
 form = resource_path("test.ui")
 form_class = uic.loadUiType(form)[0]
 
-object_dict = {'1':'person','2':'desk_vacant','3':'desk_occupied','4':'None',
-                'person' : '1', 'desk_vacant' : '2', 'desk_occupied' : '3', 'None':'4'}
+object_dict = {'1':'Empty', '2':'Away', '3':'Full', '4':'None',
+                'Empty':'1', 'Away':'2', 'Full':'3', 'None':'4'}
 
 
 class BoxLabel(PyQt5.QtWidgets.QLabel):

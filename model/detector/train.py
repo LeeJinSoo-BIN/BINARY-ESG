@@ -21,7 +21,69 @@ from mmdet.utils import (collect_env, get_device, get_root_logger,
                          replace_cfg_vals, setup_multi_processes,
                          update_data_root)
 
+import pdb;
 
+DATASET_PATH = 'train_2017_small'
+CONFIG_FILE = '.\configs\yolox\yolox_x_8x8_300e_coco.py'
+
+
+from mmdet.datasets.builder import DATASETS
+from mmdet.datasets.custom import CustomDataset
+
+@DATASETS.register_module()
+class BINARY_ESG_Dataset(CustomDataset):
+
+    CLASSES = ('Empty', 'Away', 'Full')
+
+    def load_annotations(self, ann_file):
+        cat2label = {k: i for i, k in enumerate(self.CLASSES)}
+        # load image list from file
+        image_list = mmcv.list_from_file(self.ann_file)
+    
+        data_infos = []
+        # convert annotations to middle format
+        for image_id in image_list:
+            filename = f'{self.img_prefix}/{image_id}.jpeg'
+            image = mmcv.imread(filename)
+            height, width = image.shape[:2]
+    
+            data_info = dict(filename=f'{image_id}.jpeg', width=width, height=height)
+    
+            # load annotations
+            label_prefix = self.img_prefix.replace('image_2', 'label_2')
+            lines = mmcv.list_from_file(osp.join(label_prefix, f'{image_id}.txt'))
+    
+            content = [line.strip().split(' ') for line in lines]
+            bbox_names = [x[0] for x in content]
+            bboxes = [[float(info) for info in x[4:8]] for x in content]
+    
+            gt_bboxes = []
+            gt_labels = []
+            gt_bboxes_ignore = []
+            gt_labels_ignore = []
+    
+            # filter 'DontCare'
+            for bbox_name, bbox in zip(bbox_names, bboxes):
+                if bbox_name in cat2label:
+                    gt_labels.append(cat2label[bbox_name])
+                    gt_bboxes.append(bbox)
+                else:
+                    gt_labels_ignore.append(-1)
+                    gt_bboxes_ignore.append(bbox)
+
+            data_anno = dict(
+                bboxes=np.array(gt_bboxes, dtype=np.float32).reshape(-1, 4),
+                labels=np.array(gt_labels, dtype=np.long),
+                bboxes_ignore=np.array(gt_bboxes_ignore,
+                                       dtype=np.float32).reshape(-1, 4),
+                labels_ignore=np.array(gt_labels_ignore, dtype=np.long))
+
+            data_info.update(ann=data_anno)
+            data_infos.append(data_info)
+
+        return data_infos
+
+        
 def parse_args():
     
     parser = argparse.ArgumentParser(description='Train a detector')
@@ -91,6 +153,7 @@ def parse_args():
         '--auto-scale-lr',
         action='store_true',
         help='enable automatically scaling LR.')
+    
     
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
@@ -218,7 +281,7 @@ def main():
         test_cfg=cfg.get('test_cfg'))
     model.init_weights()
 
-    cfg.data.train['dataset']['img_prefix'] = 'data/coco/images/train2017/'
+    cfg.data.train['dataset']['img_prefix'] = DATASET_PATH
     pdb.set_trace()
     datasets = [build_dataset(cfg.data.train)]
     if len(cfg.workflow) == 2:
