@@ -75,7 +75,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Character</string>
+     <string>None</string>
     </property>
    </widget>
    <widget class="QListWidget" name="List_img">
@@ -130,6 +130,19 @@
     </property>
     <property name="text">
      <string>불러오기</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Label_message">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>840</y>
+      <width>191</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

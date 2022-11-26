@@ -51,9 +51,30 @@ model = dict(
         type='YOLOXHead', num_classes=80, in_channels=320, feat_channels=320),
     train_cfg=dict(assigner=dict(type='SimOTAAssigner', center_radius=2.5)),
     test_cfg=dict(score_thr=0.01, nms=dict(type='nms', iou_threshold=0.65)))
-data_root = './data/binary/'
-dataset_type = 'CocoDataset'
+data_root = 'data/binary/'
+dataset_type = 'BINARY_ESG_Dataset'
+kitty_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(
+        type='Resize',
+        img_scale=[(1333, 640), (1333, 672), (1333, 704), (1333, 736),
+                   (1333, 768), (1333, 800)],
+        multiscale_mode='value',
+        keep_ratio=True),
+    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(
+        type='Normalize',
+        mean=[103.53, 116.28, 123.675],
+        std=[1.0, 1.0, 1.0],
+        to_rgb=False),
+    dict(type='Pad', size_divisor=32),
+    dict(type='DefaultFormatBundle'),
+    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+]
 train_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
     dict(type='Mosaic', img_scale=(640, 640), pad_val=114.0),
     dict(
         type='RandomAffine', scaling_ratio_range=(0.1, 2),
@@ -76,38 +97,29 @@ train_pipeline = [
 ]
 train_dataset = dict(
     type='BINARY_ESG_Dataset',
-    dataset=dict(
-        type='CocoDataset',
-        ann_file='./data/binary/annotations/instances_train_esg.json',
-        img_prefix='./data/binary/train_esg/',
-        pipeline=[
-            dict(type='LoadImageFromFile'),
-            dict(type='LoadAnnotations', with_bbox=True)
-        ],
-        filter_empty_gt=False),
+    data_root='data/binary/',
+    ann_file='annotations/instances_train_esg.json',
+    img_prefix='train_esg/',
     pipeline=[
-        dict(type='Mosaic', img_scale=(640, 640), pad_val=114.0),
+        dict(type='LoadImageFromFile'),
+        dict(type='LoadAnnotations', with_bbox=True),
         dict(
-            type='RandomAffine',
-            scaling_ratio_range=(0.1, 2),
-            border=(-320, -320)),
-        dict(
-            type='MixUp',
-            img_scale=(640, 640),
-            ratio_range=(0.8, 1.6),
-            pad_val=114.0),
-        dict(type='YOLOXHSVRandomAug'),
+            type='Resize',
+            img_scale=[(1333, 640), (1333, 672), (1333, 704), (1333, 736),
+                       (1333, 768), (1333, 800)],
+            multiscale_mode='value',
+            keep_ratio=True),
         dict(type='RandomFlip', flip_ratio=0.5),
-        dict(type='Resize', img_scale=(640, 640), keep_ratio=True),
         dict(
-            type='Pad',
-            pad_to_square=True,
-            pad_val=dict(img=(114.0, 114.0, 114.0))),
-        dict(
-            type='FilterAnnotations', min_gt_bbox_wh=(1, 1), keep_empty=False),
+            type='Normalize',
+            mean=[103.53, 116.28, 123.675],
+            std=[1.0, 1.0, 1.0],
+            to_rgb=False),
+        dict(type='Pad', size_divisor=32),
         dict(type='DefaultFormatBundle'),
         dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
-    ])
+    ],
+    filter_empty_gt=False)
 test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
@@ -131,44 +143,33 @@ data = dict(
     persistent_workers=True,
     train=dict(
         type='BINARY_ESG_Dataset',
-        dataset=dict(
-            type='CocoDataset',
-            ann_file='./data/binary/annotations/instances_train_esg.json',
-            img_prefix='./data/binary/train_esg/',
-            pipeline=[
-                dict(type='LoadImageFromFile'),
-                dict(type='LoadAnnotations', with_bbox=True)
-            ],
-            filter_empty_gt=False),
+        data_root='data/binary/',
+        ann_file='annotations/instances_train_esg.json',
+        img_prefix='train_esg/',
         pipeline=[
-            dict(type='Mosaic', img_scale=(640, 640), pad_val=114.0),
+            dict(type='LoadImageFromFile'),
+            dict(type='LoadAnnotations', with_bbox=True),
             dict(
-                type='RandomAffine',
-                scaling_ratio_range=(0.1, 2),
-                border=(-320, -320)),
-            dict(
-                type='MixUp',
-                img_scale=(640, 640),
-                ratio_range=(0.8, 1.6),
-                pad_val=114.0),
-            dict(type='YOLOXHSVRandomAug'),
+                type='Resize',
+                img_scale=[(1333, 640), (1333, 672), (1333, 704), (1333, 736),
+                           (1333, 768), (1333, 800)],
+                multiscale_mode='value',
+                keep_ratio=True),
             dict(type='RandomFlip', flip_ratio=0.5),
-            dict(type='Resize', img_scale=(640, 640), keep_ratio=True),
             dict(
-                type='Pad',
-                pad_to_square=True,
-                pad_val=dict(img=(114.0, 114.0, 114.0))),
-            dict(
-                type='FilterAnnotations',
-                min_gt_bbox_wh=(1, 1),
-                keep_empty=False),
+                type='Normalize',
+                mean=[103.53, 116.28, 123.675],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
+            dict(type='Pad', size_divisor=32),
             dict(type='DefaultFormatBundle'),
             dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
-        ]),
+        ],
+        filter_empty_gt=False),
     val=dict(
-        type='CocoDataset',
-        ann_file='./data/binary/annotations/instances_val_esg.json',
-        img_prefix='./data/binary/val_esg/',
+        type='BINARY_ESG_Dataset',
+        ann_file='data/binary/annotations/instances_val_esg.json',
+        img_prefix='data/binary/val_esg/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -187,9 +188,9 @@ data = dict(
                 ])
         ]),
     test=dict(
-        type='CocoDataset',
-        ann_file='./data/binary/annotations/instances_val_esg.json',
-        img_prefix='./data/binary/test_esg/',
+        type='BINARY_ESG_Dataset',
+        ann_file='data/binary/annotations/instances_val_esg.json',
+        img_prefix='data/binary/test_esg/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(

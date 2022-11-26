@@ -8,7 +8,7 @@ a = Analysis(
     ['annotation_tool.py'],
     pathex=[],
     binaries=[],
-    datas=[('test.ui', '.')],
+    datas=[('test.ui','.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

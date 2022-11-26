@@ -22,11 +22,24 @@ model = dict(
     test_cfg=dict(score_thr=0.01, nms=dict(type='nms', iou_threshold=0.65)))
 
 # dataset settings
-data_root = './data/binary/'
+data_root = 'data/binary/'
+dataset_type = 'BINARY_ESG_Dataset'
 
-dataset_type = 'CocoDataset'
+kitty_pipeline = [{'type': 'LoadImageFromFile'},
+ {'type': 'LoadAnnotations', 'with_bbox': True},
+ {'type': 'Resize',
+  'img_scale': [(1333, 640), (1333, 672), (1333, 704), (1333, 736), (1333, 768), (1333, 800)],
+  'multiscale_mode': 'value',
+  'keep_ratio': True},
+ {'type': 'RandomFlip', 'flip_ratio': 0.5},
+ {'type': 'Normalize', 'mean': [103.53, 116.28, 123.675], 'std': [1.0, 1.0, 1.0], 'to_rgb': False},
+ {'type': 'Pad', 'size_divisor': 32}, 
+ {'type': 'DefaultFormatBundle'},
+{'type': 'Collect', 'keys': ['img', 'gt_bboxes', 'gt_labels']}]
 
 train_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
     dict(type='Mosaic', img_scale=img_scale, pad_val=114.0),
     dict(
         type='RandomAffine',
@@ -55,18 +68,13 @@ train_pipeline = [
 ]
 
 train_dataset = dict(
-    type='BINARY_ESG_Dataset',
-    dataset=dict(
-        type=dataset_type,
-        ann_file=data_root + 'annotations/instances_train_esg.json',
-        img_prefix=data_root + 'train_esg/',
-        pipeline=[
-            dict(type='LoadImageFromFile'),
-            dict(type='LoadAnnotations', with_bbox=True)
-        ],
-        filter_empty_gt=False,
-    ),
-    pipeline=train_pipeline)
+    type= dataset_type,
+    data_root = data_root,
+    ann_file= 'annotations/instances_train_esg.json',
+    img_prefix= 'train_esg/',
+    pipeline = kitty_pipeline,
+    filter_empty_gt=False,
+)
 
 test_pipeline = [
     dict(type='LoadImageFromFile'),

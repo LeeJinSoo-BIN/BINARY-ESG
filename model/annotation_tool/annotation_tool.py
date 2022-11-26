@@ -1,16 +1,15 @@
 import sys
 import PyQt5
 from PyQt5 import uic
-import cv2
+from cv2 import IMREAD_COLOR, imdecode
 import os
 import numpy as np
 from PyQt5.QtCore import Qt, QRect
 import sys
 from PyQt5.QtGui import QPixmap, QPainter, QPen, QColor
-import random
 import json
-from itertools import chain
-from collections import defaultdict
+import datetime
+
 
 
 def resource_path(relative_path):
@@ -21,9 +20,24 @@ def resource_path(relative_path):
 form = resource_path("test.ui")
 form_class = uic.loadUiType(form)[0]
 
-object_dict = {'1':'Empty', '2':'Away', '3':'Full', '4':'None',
-                'Empty':'1', 'Away':'2', 'Full':'3', 'None':'4'}
+object_dict = { 1:'Empty', 2:'Away', 3:'Full', 
+                'Empty':1, 'Away':2, 'Full':3}
 
+categories = [{
+    "id": 1,
+    "name": 'Empty',
+    "supercategory": 'Empty'
+},
+{
+    "id": 2,
+    "name": 'Away',
+    "supercategory": 'Away'
+},
+{
+    "id": 3,
+    "name": 'Full',
+    "supercategory": 'Full'
+}]
 
 class BoxLabel(PyQt5.QtWidgets.QLabel):
     def __init__(self,parent):
@@ -38,7 +52,7 @@ class BoxLabel(PyQt5.QtWidgets.QLabel):
         
         self.setMouseTracking(True)
 
-        
+        self.ann_ids = 1
 
     def mousePressEvent(self,event):
         self.flag = True
@@ -51,7 +65,8 @@ class BoxLabel(PyQt5.QtWidgets.QLabel):
         
         if self.obj != None :
             rect = QRect(self.x0, self.y0, self.x1-self.x0, self.y1-self.y0)
-            self.rectangles.append((rect, object_dict[self.obj]))
+            self.rectangles.append((rect, object_dict[self.obj], self.ann_ids))
+            self.ann_ids += 1
         self.update()
          # 
     def mouseMoveEvent(self,event):
@@ -65,14 +80,12 @@ class BoxLabel(PyQt5.QtWidgets.QLabel):
     def select_Qpen(self, obj, type=Qt.SolidLine ):
         
         
-        if obj == '1' :            
-            return QPen(QColor(255,0,0),Qt.SolidLine)
-        elif obj == '2' :
-            return QPen(QColor(255,153,221),Qt.SolidLine)
-        elif obj == '3' :
+        if obj == 1 :            
+            return QPen(QColor(0,255,0),Qt.SolidLine)
+        elif obj == 2 :
             return QPen(QColor(255,255,0),Qt.SolidLine)
-        elif obj == '4' :
-            return QPen(QColor(255,100,255),Qt.SolidLine)
+        elif obj == 3 :
+            return QPen(QColor(255,0,0),Qt.SolidLine)
         else:
             return QPen(QColor(0,0,0,0),Qt.SolidLine)
 
@@ -96,7 +109,7 @@ class BoxLabel(PyQt5.QtWidgets.QLabel):
 
     def draw_rects(self):
         painter = QPainter(self)
-        for rect, obj in self.rectangles :            
+        for rect, obj, _ in self.rectangles :            
             qpen = self.select_Qpen(object_dict[obj])
             painter.setPen(qpen)
             painter.drawRect(rect)
@@ -107,18 +120,27 @@ class BoxLabel(PyQt5.QtWidgets.QLabel):
         save_info = list()
         currentImageInfo = {
                             "file_name": img_name,
-                            "id" : img_id
+                            "id" : img_id,
+                            "height" : img.shape[0],
+                            "widht" : img.shape[1]
                             }
                             
 
         save_info.append(currentImageInfo)
 
         currentAnnotation = list()
-        for rect,obj in self.rectangles :
+        for rect, obj, ann_id in self.rectangles :
             currentAnnotation.append({
-                                    "bbox": [rect.x(), rect.y(), rect.width()+rect.x(), rect.height()+rect.y()],#x1 y1 x2 y2
-                                    "obj" : obj,
-                                    "id" : img_id
+                                    "bbox": [
+                                            rect.x(),
+                                            rect.y(),
+                                            rect.width(),
+                                            rect.height()
+                                            ],#xmin ymin w h
+                                    "category_id" : object_dict[obj],
+                                    "image_id" : img_id,
+                                    "id" : ann_id,
+                                    "iscrowd" : 0
                                     })
         save_info.extend(currentAnnotation)
         self.rectangles = []
@@ -136,8 +158,10 @@ class BoxLabel(PyQt5.QtWidgets.QLabel):
             print(save_info)
             for x in range(1, len(save_info)):
                 print(save_info[x])
-                rect = QRect(save_info[x]["bbox"][0], save_info[x]["bbox"][1], save_info[x]["bbox"][2]-save_info[x]["bbox"][0], save_info[x]["bbox"][3]-save_info[x]["bbox"][1])
-                saved_rect.append((rect,save_info[x]["obj"]))
+                xmin, ymin, w, h = save_info[x]["bbox"]
+                rect = QRect(xmin, ymin, w, h)
+                ann_id = save_info[x]["id"]
+                saved_rect.append((rect, object_dict[save_info[x]["category_id"]], ann_id))
             self.rectangles = saved_rect
         self.update()
 
@@ -175,8 +199,7 @@ class WindowClass(PyQt5.QtWidgets.QMainWindow, form_class):
         self.save_info = None
 
         self.previous_row = -1
-        self.json_name = "annotations.json"
-
+        self.json_name = "annotations.json"        
 
     def keyPressEvent(self, e):
         def isPrintable(key):
@@ -196,14 +219,16 @@ class WindowClass(PyQt5.QtWidgets.QMainWindow, form_class):
 
         if not control and isPrintable(e.key()):
             if self.image_folder != None :
-                if e.text() == 'W' or e.text() == 'w' :
-                    self.List_img.setCurrentRow(self.List_img.currentRow()+1)                   
+                if e.text() == 'W' or e.text() == 'w' :                    
+                    if(self.List_img.currentRow()+1 != self.List_img.count()):
+                        self.List_img.setCurrentRow(self.List_img.currentRow()+1)                   
 
                 elif e.text() == 'Q' or e.text() == 'q' :
-                    self.List_img.setCurrentRow(self.List_img.currentRow()-1)
+                    if(self.List_img.currentRow()-1 != -1):
+                        self.List_img.setCurrentRow(self.List_img.currentRow()-1)
 
-                elif e.text() == '1' or e.text() == '2' or e.text() == '3' or e.text() == '4':
-                    self.box_object = e.text()
+                elif e.text() == '1' or e.text() == '2' or e.text() == '3' :
+                    self.box_object = int(e.text())
                     self.Label_object.setText(object_dict[self.box_object])
                     self.Label_box.obj = self.box_object
 
@@ -232,7 +257,7 @@ class WindowClass(PyQt5.QtWidgets.QMainWindow, form_class):
     def img_name_Change(self):
         if self.List_img.currentItem() != None:
             selected_image = self.image_folder +'/'+ self.List_img.currentItem().text()
-            self.img = cv2.imdecode(np.fromfile(selected_image,np.uint8),cv2.IMREAD_COLOR)
+            self.img = imdecode(np.fromfile(selected_image,np.uint8), IMREAD_COLOR)
             qimg = PyQt5.QtGui.QPixmap()
             qimg.load(selected_image)            
             self.Label_screen.setPixmap(qimg)
@@ -261,11 +286,13 @@ class WindowClass(PyQt5.QtWidgets.QMainWindow, form_class):
         coco_form_image_list = list()
         coco_form_anno_list = list()
         print(self.save_info)
-        for x in range(len(self.save_info)):
-            if self.save_info[x] != None :                
-                if len(self.save_info[x]) != 1 :
-                    coco_form_anno_list.extend(self.save_info[x][1:])
-                    coco_form_image_list.append(self.save_info[x][0])
+        for save_info in self.save_info:
+            if save_info != None :                
+                if len(save_info) != 1 :
+                    ann = save_info[1:]
+                    img = save_info[0]
+                    coco_form_anno_list.extend(ann)
+                    coco_form_image_list.append(img)
         coco_form_image_list = np.array(coco_form_image_list).reshape(-1).tolist()
         coco_form_anno_list = np.array(coco_form_anno_list).reshape(-1).tolist()
         coco_form_dict = {
@@ -274,13 +301,16 @@ class WindowClass(PyQt5.QtWidgets.QMainWindow, form_class):
                                 "num of objects" : len(coco_form_anno_list)
                                 },
                          "images":coco_form_image_list,
-                         "annotations":coco_form_anno_list
+                         "annotations":coco_form_anno_list,
+                         "categories": categories
                         }
                          
         
         with open(self.image_folder+'_'+self.json_name, 'w') as outfile:
             json.dump(coco_form_dict, outfile, indent=4)
-
+        
+        now = datetime.datetime.now()
+        self.Label_message.setText(str(now).split('.')[0])
     def load_btn_click(self):
         tmp = PyQt5.QtWidgets.QFileDialog.getOpenFileName(self, "JSON 선택", filter = "JSON (*.json)")[0]
         if len(tmp) != 0 :
