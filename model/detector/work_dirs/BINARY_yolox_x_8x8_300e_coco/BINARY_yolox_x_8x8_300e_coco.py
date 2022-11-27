@@ -34,7 +34,7 @@ resume_from = None
 workflow = [('train', 1)]
 opencv_num_threads = 0
 mp_start_method = 'fork'
-auto_scale_lr = dict(enable=False, base_batch_size=64)
+auto_scale_lr = dict(enable=False, base_batch_size=32)
 img_scale = (640, 640)
 model = dict(
     type='YOLOX',
@@ -48,7 +48,7 @@ model = dict(
         out_channels=320,
         num_csp_blocks=4),
     bbox_head=dict(
-        type='YOLOXHead', num_classes=80, in_channels=320, feat_channels=320),
+        type='YOLOXHead', num_classes=3, in_channels=320, feat_channels=320),
     train_cfg=dict(assigner=dict(type='SimOTAAssigner', center_radius=2.5)),
     test_cfg=dict(score_thr=0.01, nms=dict(type='nms', iou_threshold=0.65)))
 data_root = 'data/binary/'
@@ -138,7 +138,7 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=8,
+    samples_per_gpu=2,
     workers_per_gpu=4,
     persistent_workers=True,
     train=dict(

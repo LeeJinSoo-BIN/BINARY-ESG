@@ -16,7 +16,8 @@ model = dict(
         num_csp_blocks=1),
     bbox_head=dict(
         type='YOLOXHead', num_classes=3, in_channels=128, feat_channels=128),
-    train_cfg=dict(assigner=dict(type='SimOTAAssigner', center_radius=2.5)),
+    #train_cfg=dict(assigner=dict(type='SimOTAAssigner', center_radius=2.5)),
+    train_cfg=None,
     # In order to align the source code, the threshold of the val phase is
     # 0.01, and the threshold of the test phase is 0.001.
     test_cfg=dict(score_thr=0.01, nms=dict(type='nms', iou_threshold=0.65)))
@@ -171,4 +172,4 @@ log_config = dict(interval=50)
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # USER SHOULD NOT CHANGE ITS VALUES.
 # base_batch_size = (8 GPUs) x (8 samples per GPU)
-auto_scale_lr = dict(base_batch_size=32)
+auto_scale_lr = dict(base_batch_size=8)
