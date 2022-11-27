@@ -119,7 +119,7 @@ class BINARY_ESG_Dataset(CustomDataset):
         gt_bboxes = []
         gt_labels = []
         gt_bboxes_ignore = []
-        gt_masks_ann = []
+        #gt_masks_ann = []
         for i, ann in enumerate(ann_info):
             if ann.get('ignore', False):
                 continue
@@ -128,8 +128,8 @@ class BINARY_ESG_Dataset(CustomDataset):
             inter_h = max(0, min(y1 + h, img_info['height']) - max(y1, 0))
             if inter_w * inter_h == 0:
                 continue
-            if ann['area'] <= 0 or w < 1 or h < 1:
-                continue
+            #if ann['area'] <= 0 or w < 1 or h < 1:
+            #    continue
             if ann['category_id'] not in self.cat_ids:
                 continue
             bbox = [x1, y1, x1 + w, y1 + h]
@@ -138,7 +138,7 @@ class BINARY_ESG_Dataset(CustomDataset):
             else:
                 gt_bboxes.append(bbox)
                 gt_labels.append(self.cat2label[ann['category_id']])
-                gt_masks_ann.append(ann.get('segmentation', None))
+                #gt_masks_ann.append(ann.get('segmentation', None))
 
         if gt_bboxes:
             gt_bboxes = np.array(gt_bboxes, dtype=np.float32)
@@ -152,14 +152,15 @@ class BINARY_ESG_Dataset(CustomDataset):
         else:
             gt_bboxes_ignore = np.zeros((0, 4), dtype=np.float32)
 
-        seg_map = img_info['filename'].rsplit('.', 1)[0] + self.seg_suffix
+        #seg_map = img_info['filename'].rsplit('.', 1)[0] + self.seg_suffix
 
         ann = dict(
             bboxes=gt_bboxes,
             labels=gt_labels,
-            bboxes_ignore=gt_bboxes_ignore,
-            masks=gt_masks_ann,
-            seg_map=seg_map)
+            bboxes_ignore=gt_bboxes_ignore
+            #masks=gt_masks_ann,
+            #seg_map=seg_map)
+            )
 
         return ann
 

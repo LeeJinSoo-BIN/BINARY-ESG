@@ -122,7 +122,7 @@ class BoxLabel(PyQt5.QtWidgets.QLabel):
                             "file_name": img_name,
                             "id" : img_id,
                             "height" : img.shape[0],
-                            "widht" : img.shape[1]
+                            "width" : img.shape[1]
                             }
                             
 
