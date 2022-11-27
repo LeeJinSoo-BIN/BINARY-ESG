@@ -79,6 +79,7 @@ class SingleStageDetector(BaseDetector):
             dict[str, Tensor]: A dictionary of loss components.
         """
         super(SingleStageDetector, self).forward_train(img, img_metas)
+        import pdb; pdb.set_trace()
         x = self.extract_feat(img)
         losses = self.bbox_head.forward_train(x, img_metas, gt_bboxes,
                                               gt_labels, gt_bboxes_ignore)
