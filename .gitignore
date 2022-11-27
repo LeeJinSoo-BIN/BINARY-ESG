@@ -4,4 +4,4 @@
 *.mp4
 
 /model/detector/data/*
-!/model/detector/data/
+
