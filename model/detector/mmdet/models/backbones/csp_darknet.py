@@ -280,6 +280,5 @@ class CSPDarknet(BaseModule):
             layer = getattr(self, layer_name)
             x = layer(x)
             if i in self.out_indices:
-                outs.append(x)
-        import pdb; pdb.set_trace()
+                outs.append(x)        
         return tuple(outs)

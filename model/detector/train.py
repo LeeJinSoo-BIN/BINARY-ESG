@@ -76,10 +76,10 @@ def main():
 
 
 
-    pdb.set_trace()
+    #pdb.set_trace()
     model = init_detector(cfg, CHECKPOINT_PATH, device='cpu')
 
-    pdb.set_trace()
+    #pdb.set_trace()
     datasets = [build_dataset(cfg.data.train)]
 
 

@@ -327,7 +327,9 @@ class BaseDenseHead(BaseModule, metaclass=ABCMeta):
                 losses: (dict[str, Tensor]): A dictionary of loss components.
                 proposal_list (list[Tensor]): Proposals of each image.
         """
+        
         outs = self(x)
+        import pdb; pdb.set_trace()
         if gt_labels is None:
             loss_inputs = outs + (gt_bboxes, img_metas)
         else:

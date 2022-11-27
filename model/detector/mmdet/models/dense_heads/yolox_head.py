@@ -79,7 +79,7 @@ class YOLOXHead(BaseDenseHead, BBoxTestMixin):
                      reduction='sum',
                      loss_weight=1.0),
                  loss_l1=dict(type='L1Loss', reduction='sum', loss_weight=1.0),
-                 train_cfg=None,
+                 train_cfg=dict(assigner=dict(type='SimOTAAssigner', center_radius=2.5)),
                  test_cfg=None,
                  init_cfg=dict(
                      type='Kaiming',
@@ -116,11 +116,11 @@ class YOLOXHead(BaseDenseHead, BBoxTestMixin):
         self.prior_generator = MlvlPointGenerator(strides, offset=0)
 
         self.test_cfg = test_cfg
-        self.train_cfg = train_cfg
-        import pdb; pdb.set_trace()
+        self.train_cfg = True
         self.sampling = False
+        
         if self.train_cfg:
-            self.assigner = build_assigner(self.train_cfg.assigner)
+            self.assigner = build_assigner(dict(type='SimOTAAssigner', center_radius=2.5))
             # sampling=False so use PseudoSampler
             sampler_cfg = dict(type='PseudoSampler')
             self.sampler = build_sampler(sampler_cfg, context=self)
@@ -204,8 +204,7 @@ class YOLOXHead(BaseDenseHead, BBoxTestMixin):
         Returns:
             tuple[Tensor]: A tuple of multi-level predication map, each is a
                 4D-tensor of shape (batch_size, 5+num_classes, height, width).
-        """
-
+        """        
         return multi_apply(self.forward_single, feats,
                            self.multi_level_cls_convs,
                            self.multi_level_reg_convs,
@@ -352,6 +351,7 @@ class YOLOXHead(BaseDenseHead, BBoxTestMixin):
             gt_bboxes_ignore (None | list[Tensor]): specify which bounding
                 boxes can be ignored when computing the loss.
         """
+        
         num_imgs = len(img_metas)
         featmap_sizes = [cls_score.shape[2:] for cls_score in cls_scores]
         mlvl_priors = self.prior_generator.grid_priors(
@@ -373,20 +373,20 @@ class YOLOXHead(BaseDenseHead, BBoxTestMixin):
             objectness.permute(0, 2, 3, 1).reshape(num_imgs, -1)
             for objectness in objectnesses
         ]
-
+        
         flatten_cls_preds = torch.cat(flatten_cls_preds, dim=1)
         flatten_bbox_preds = torch.cat(flatten_bbox_preds, dim=1)
         flatten_objectness = torch.cat(flatten_objectness, dim=1)
         flatten_priors = torch.cat(mlvl_priors)
         flatten_bboxes = self._bbox_decode(flatten_priors, flatten_bbox_preds)
-
+        
         (pos_masks, cls_targets, obj_targets, bbox_targets, l1_targets,
          num_fg_imgs) = multi_apply(
              self._get_target_single, flatten_cls_preds.detach(),
              flatten_objectness.detach(),
              flatten_priors.unsqueeze(0).repeat(num_imgs, 1, 1),
              flatten_bboxes.detach(), gt_bboxes, gt_labels)
-
+        
         # The experimental results show that ‘reduce_mean’ can improve
         # performance on the COCO dataset.
         num_pos = torch.tensor(
@@ -419,7 +419,7 @@ class YOLOXHead(BaseDenseHead, BBoxTestMixin):
                 flatten_bbox_preds.view(-1, 4)[pos_masks],
                 l1_targets) / num_total_samples
             loss_dict.update(loss_l1=loss_l1)
-
+        
         return loss_dict
 
     @torch.no_grad()
