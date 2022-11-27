@@ -117,7 +117,7 @@ class YOLOXHead(BaseDenseHead, BBoxTestMixin):
 
         self.test_cfg = test_cfg
         self.train_cfg = train_cfg
-
+        import pdb; pdb.set_trace()
         self.sampling = False
         if self.train_cfg:
             self.assigner = build_assigner(self.train_cfg.assigner)
