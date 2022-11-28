@@ -130,12 +130,22 @@ class BoxLabel(PyQt5.QtWidgets.QLabel):
 
         currentAnnotation = list()
         for rect, obj, ann_id in self.rectangles :
+            xmin = rect.x()
+            ymin = rect.y()
+            w = rect.width()
+            h = rect.height()
+            if w < 0 :
+                xmin += w
+                w = -w
+            if h < 0 :
+                ymin += h
+                h = -h
             currentAnnotation.append({
                                     "bbox": [
-                                            rect.x(),
-                                            rect.y(),
-                                            rect.width(),
-                                            rect.height()
+                                            xmin,
+                                            ymin,
+                                            w,
+                                            h
                                             ],#xmin ymin w h
                                     "category_id" : object_dict[obj],
                                     "image_id" : img_id,
@@ -184,7 +194,7 @@ class WindowClass(PyQt5.QtWidgets.QMainWindow, form_class):
         
         self.Label_screen.setCursor(Qt.CrossCursor)
         self.Label_box = BoxLabel(self)
-        self.Label_box.setGeometry(QRect(20, 10, 1024, 768))
+        self.Label_box.setGeometry(QRect(20, 10, 640, 640))
         self.Label_box.setCursor(Qt.CrossCursor)
 
         

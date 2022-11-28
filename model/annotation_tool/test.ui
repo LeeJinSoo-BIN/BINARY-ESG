@@ -28,8 +28,8 @@
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>1024</width>
-      <height>768</height>
+      <width>640</width>
+      <height>640</height>
      </rect>
     </property>
     <property name="text">
