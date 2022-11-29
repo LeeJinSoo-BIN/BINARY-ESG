@@ -2,18 +2,31 @@ body {
     margin: 20px;
 }
 
+@media(min-width:800px){
+    body {
+        width: 800px;
+        margin: 0 auto;
+    }
+}
+
 #title {
     text-align: center;
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 10px;
-    background-color: rgb(91, 91, 218);
-    color: white
+    border-bottom: 5px solid black;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    margin-bottom:0px;
+    color: black;
+}
+
+.title_font {
+    font-family: 'Syncopate';
+    font-weight: bold;
 }
 
 .font {
-    font-family: 'Nanum Gothic', sans-serif;
+    font-family: 'Gothic A1';
 }
+
 #titlebutton {
     /*float: right;*/
     display: grid;
@@ -66,12 +79,14 @@ body {
     border: 1px solid black;
     border-radius: 10px;
     margin-bottom: 20px;
+    margin-top:20px;
 }
 
 #window {
     text-align: center;
     padding:1px;
-    background-color: rgb(152, 152, 152);
+    border: 3px solid rgba(0, 0, 0, 70%);
+    background-color: white;
     margin: 15px 15px 0;
     border-radius: 10px;
 }
@@ -84,12 +99,13 @@ body {
 #studyroom {
     writing-mode: vertical-lr;
     text-align: center;
-    padding: 170px 20px;
+    padding: 340% 20px;
     border: none;
     border-radius: 10px;
     margin-bottom: 20px;
     margin-top: 20px;
-    background-color: rgb(152, 152, 152);
+    border: 3px solid rgba(0, 0, 0, 70%);
+    background-color: white;
 }
 
 #seats {
@@ -116,37 +132,43 @@ body {
     margin: 0;
     padding-top: 15px;
     color: white;
-    background-color: gray;
+    background-color: rgba(0, 0, 0, 30%);
 }
 
 #backmap {
-    background-color: rgb(96, 96, 96);
+    background-color: rgba(0, 0, 0, 5%);
     padding-top: 5px;
     border-radius: 10px;
+    height: 530px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .seatbutton {
-    padding: 20px 60px;
+    padding: 7% 28%;
     border: 0;
-    margin: 25px 5px;
-    font-size: 20px;
+    border-radius: 10px;
+    margin: 8% 0px;
+    font-size: 180%;
     cursor: pointer;
     color: black;
+    font-family: 'Space Mono';
+    background-color: white;
 }
 
 .usingseat {
-    border: 5px solid rgb(74, 74, 74);
-    border-radius: 10px;
-    background-color: rgb(154, 80,70);
-    width: 20px;
+    border: 3px solid rgb(254, 65, 65);
+    box-shadow: 0px 6px rgb(254, 65, 65);
 }
 
 .emptyseat {
-    background-color: rgb(61, 171, 49);
+    border: 3px solid rgb(61, 171, 49);
+    box-shadow: 0px 6px rgb(61, 171, 49);
 }
 
 .helpseat {
-    background-color: rgb(238, 221, 64);
+    border: 3px solid rgb(238, 221, 64);
+    box-shadow: 0px 6px rgb(238, 221, 64);
 }
 
 * {box-sizing: border-box}
@@ -168,8 +190,8 @@ button:hover {
 
 /* Float cancel and delete buttons and add an equal width */
 .cancelbtn, .deletebtn {
-    float: left;
-    width: 50%;
+    align-content: center;
+    width: 30%;
 }
 
 /* Add a color to the cancel button */
@@ -187,6 +209,7 @@ button:hover {
 .container {
     padding: 16px;
     text-align: center;
+    font-family: 'Gothic A1';
 }
 
 /* The Modal (background) */
@@ -244,6 +267,6 @@ hr {
 /* Change styles for cancel button and delete button on extra small screens */
 @media screen and (max-width: 300px) {
     .cancelbtn, .deletebtn {
-        width: 100%;
+        width: 30%;
     }
 }
