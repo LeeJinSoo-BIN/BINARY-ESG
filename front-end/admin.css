@@ -2,14 +2,34 @@ body {
     margin: 20px;
 }
 
+@media(min-width:1000px){
+    body {
+        width: 1000px;
+        margin: 0 auto;
+    }
+}
+
 #title {
     text-align: center;
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 10px;
-    background-color: rgb(91, 91, 218);
-    color: white
+    border-bottom: 5px solid black;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    margin-bottom:0px;
+    /*background-color: rgb(91, 91, 218);*/
+    color: black;
 }
+
+.title_font {
+    font-family: 'Syncopate';
+    font-weight: bold;
+    /*font-family: 'Nanum Gothic', sans-serif;*/
+}
+
+.font {
+    font-family: 'Gothic A1';
+    /*font-family: 'Nanum Gothic', sans-serif;*/
+}
+
 
 #gridseatinfo {
     text-align: center;
@@ -18,13 +38,15 @@ body {
     border: 1px solid black;
     border-radius: 10px;
     margin-bottom: 20px;
+    margin-top:20px;
 }
 
 #window {
     text-align: center;
-    border: 1px solid gray;
-    background-color: gray;
+    padding:1px;
+    background-color: rgba(0, 0, 0, 20%);
     margin: 15px 15px 0;
+    border-radius: 10px;
 }
 
 #gridmap {
@@ -35,18 +57,18 @@ body {
 #studyroom {
     writing-mode: vertical-lr;
     text-align: center;
-    padding: 170px 20px;
-    border: 1px solid black;
+    padding: 340% 20px;
+    border: none;
+    border-radius: 10px;
     margin-bottom: 20px;
     margin-top: 20px;
-    background-color: gray;
-    border:0px
+    background-color: rgba(0, 0, 0, 20%);
 }
 
 #seats {
     display: grid;
     text-align: center;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto;
     margin-left: 50px;
     margin-right: 50px;
 }
@@ -71,27 +93,38 @@ body {
 }
 
 #backmap {
-    background-color: rgb(96, 96, 96);
+    background-color: rgba(0, 0, 0, 10%);
     padding-top: 5px;
     border-radius: 10px;
 }
 
+
 #grid_backmap {
     display: grid;
-    grid-template-columns: 7fr 2fr;
+    grid-template-columns: 3fr 1fr;
 }
 
 #admin_alam {
-    background-color: gray;
+    background-color: rgba(160,160,160,0.3);
     border-radius: 10px;
     margin-left:20px;
-    height: 600px;
+    height: auto;
     overflow-y:auto;
 
 }
 
+.alam_name {
+    background-color: rgb(172, 172, 172);
+    border-radius: 10px;
+    padding:15px;
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
+
+}
+
 .alam {
-    background-color: rgb(96,96,96);
+    background-color: rgba(96,96,96,0.4);
     margin:10px;
     border-radius: 10px;
     padding: 15px;
@@ -99,23 +132,28 @@ body {
 }
 
 .seatbutton {
-    padding: 20px 60px;
-    border: 0;
-    margin: 25px 5px;
-    font-size: 20px;
-    cursor: pointer;
+     /*padding: 30px 90px;*/
+     padding: 10% 25%;
+     border: 0;
+     border-radius: 10px;
+     /*margin:*/
+     margin: 10% 0px;
+     font-size: 20px;
+     cursor: pointer;
+     color: black;
+     font-weight: bold;
 }
 
 .usingseat {
-    background-color: red;
+    background-color: rgb(254, 65, 65);
 }
 
 .emptyseat {
-    background-color: greenyellow;
+    background-color: rgb(61, 171, 49);
 }
 
 .helpseat {
-    background-color: yellow;
+    background-color: rgb(238, 221, 64);
 }
 
 * {box-sizing: border-box}
@@ -123,7 +161,7 @@ body {
 /* Set a style for all buttons */
 button {
     background-color: #04AA6D;
-    color: white;
+    color: black;
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
@@ -202,6 +240,7 @@ hr {
     color: #f44336;
     cursor: pointer;
 }
+
 
 /* Clear floats */
 .clearfix::after {
