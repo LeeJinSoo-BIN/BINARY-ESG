@@ -81,9 +81,9 @@
    <widget class="QListWidget" name="List_img">
     <property name="geometry">
      <rect>
-      <x>1060</x>
+      <x>969</x>
       <y>10</y>
-      <width>150</width>
+      <width>241</width>
       <height>384</height>
      </rect>
     </property>

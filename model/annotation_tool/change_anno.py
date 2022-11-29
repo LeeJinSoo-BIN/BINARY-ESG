@@ -21,15 +21,17 @@ def xywh_to_xyxy(anno_dict):
         anno["bbox"] = [xmin, ymin, xmax, ymax]
     return anno_dict
     
-input_json = 'binary_esg_train_xyxy.json'
-output_json = 'binary_esg_train_xywh.json'
+input_json = 'train_esg_annotations_no.json'
+output_json = 'train_esg_annotations_yes.json'
 with open(input_json) as f:
     json_object = json.load(f)
 
-new_json_object = xyxy_to_xywh(json_object)
+#new_json_object = xyxy_to_xywh(json_object)
+new_json_object = xywh_to_xyxy(json_object)
+nnew_json_object = xyxy_to_xywh(new_json_object)
 
 with open(output_json, 'w') as f:
-    json.dump(new_json_object, f, indent=2)
+    json.dump(nnew_json_object, f, indent=2)
 
 
 
