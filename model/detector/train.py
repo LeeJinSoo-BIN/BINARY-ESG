@@ -97,8 +97,11 @@ def main():
             CLASSES=datasets[0].CLASSES)
     # add an attribute for visualization convenience
     model.CLASSES = datasets[0].CLASSES
-
+    model_dict = model.state_dict()
     pdb.set_trace()
+    import torch
+    torch.save(model_dict,"data/binary/pretrain/pretrain.pth")
+    
     train_detector(
         model,
         datasets,
