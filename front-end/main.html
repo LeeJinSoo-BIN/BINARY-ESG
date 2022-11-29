@@ -1,46 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./main.css"/>
+    <link rel="stylesheet" href="main.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;800&display=swap" rel="stylesheet">
     <title>자리 안내 서비스</title>
 </head>
 <body>
-    <h1>좌석 안내 서비스 입니다.</h1>
-    <div id="gridseatinfo">
-        <p id="seatinfo">잔여좌석 안내</p>
-        <p>이용중 : 7석</p>
-        <p>이용 가능 : 1석</p>
-        <p>자리 비움 : 2석</p>
-    </div>
+<h1 id="title" class="font">Checking Seats Service</h1>
+<div id="gridseatinfo">
+    <p id="seatinfo" class="font">잔여좌석 안내</p>
+    <p class="font">이용중 : <span th:text="${seatNumber.fullSeat}"></span>석</p>
+    <p>이용 가능 : <span th:text="${seatNumber.emptySeat}"></span>석</p>
+    <p class="font">자리 비움 : <span th:text="${seatNumber.awaySeat}"></span>석</p>
+</div>
+<div id="backmap">
     <div id="window">
-        <p>창가</p>
+        <p class="font">창가</p>
     </div>
     <div id="gridmap">
         <div>
-            <p id="studyroom">스터디룸</p>
+            <p id="studyroom" class="font">스터디룸</p>
         </div>
         <div id="seats">
-            <div>
-                <p class="seat">1</p>
-                <p class="seat">2</p>
-                <p class="seat">3</p>
-                <p class="seat">4</p>
-            </div>
-            <div>
-                <p class="seat">5</p>
-                <p class="seat">6</p>
-                <p class="seat">7</p>
-                <p class="seat">8</p>
+            <div th:each="seat : ${seats}" th:switch="${seat.status.toString()}">
+                <button th:case="EMPTY" class="seatbutton emptyseat" onclick="alert('이미 비어있는 자리입니다.')"
+                        th:text="${seat.seatNum}">
+                </button>
+                <button th:case="AWAY" class="seatbutton helpseat"
+                        th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'block\''"
+                        th:text="${seat.seatNum}">
+                </button>
+                <button th:case="FULL" class="seatbutton usingseat" onclick="alert('이용중인 자리입니다.')"
+                        th:text="${seat.seatNum}">
+                </button>
+                <div th:id="'id' + ${seat.seatNum}" class="modal">
+                    <span th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
+                          class="close"
+                          title="Close Modal">&times;</span>
+                    <form class="modal-content" action="/home">
+                        <div class="container">
+                            <h1>자리 비움 요청</h1>
+                            <p>자리 비움 요청을 하시겠습니까?</p>
+
+                            <div class="clearfix">
+                                <button type="button"
+                                        th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
+                                        class="cancelbtn">취소
+                                </button>
+                                <button type="button"
+                                        th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
+                                        th:class="'request' + ${seat.seatNum}" id="request"
+                                        th:classappend="${seat.seatNum}">자리 비움 요청
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <div id="gridstateseat">
-        <p>이용중</p>
-        <p>이용 가능</p>
-        <p>자리 비움</p>
-    </div>
+</div>
+<div id="gridstateseat">
+    <p><span style="color:rgb(254, 65, 65)">●</span> 이용중</p>
+    <p><span style="color:rgb(61, 171, 49)">●</span> 이용 가능</p>
+    <p><span style="color:rgb(238, 221, 64)">●</span>자리 비움</p>
+</div>
+<script src='/js/home.js'></script>
+<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
+<script th:inline="javascript">
+    $(function () {
+        var requestBtn = [];
+        for (let i = 1; i <= 8; i++) {
+            requestBtn[i] = $('.request' + i);
+        }
+
+        var sock = new SockJS("/ws");
+
+        sock.onopen = function () {
+            sock.onmessage = function (e) {
+                window.location.reload();
+            }
+        }
+
+        for (let i = 1; i <= 8; i++) {
+            requestBtn[i].click(function () {
+                sock.send(JSON.stringify({seatNum: i, messageType: 'REQUEST'}));
+            });
+        }
+    });
+</script>
 </body>
 </html>
