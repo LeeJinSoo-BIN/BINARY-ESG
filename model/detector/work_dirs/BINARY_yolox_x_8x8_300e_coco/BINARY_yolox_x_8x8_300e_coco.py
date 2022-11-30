@@ -16,11 +16,11 @@ lr_config = dict(
     num_last_epochs=15,
     min_lr_ratio=0.05)
 runner = dict(type='EpochBasedRunner', max_epochs=300)
-checkpoint_config = dict(interval=10)
+checkpoint_config = dict(interval=50)
 log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [
     dict(type='YOLOXModeSwitchHook', num_last_epochs=15, priority=48),
-    dict(type='SyncNormHook', num_last_epochs=15, interval=10, priority=48),
+    dict(type='SyncNormHook', num_last_epochs=15, interval=50, priority=48),
     dict(
         type='ExpMomentumEMAHook',
         resume_from=None,
@@ -215,9 +215,9 @@ data = dict(
         ]))
 max_epochs = 300
 num_last_epochs = 15
-interval = 10
+interval = 50
 evaluation = dict(
-    save_best='auto', interval=10, dynamic_intervals=[(285, 1)], metric='bbox')
-work_dir = './work_dirs\BINARY_yolox_x_8x8_300e_coco'
+    save_best='auto', interval=50, dynamic_intervals=[(285, 1)], metric='bbox')
+work_dir = './work_dirs/BINARY_yolox_x_8x8_300e_coco'
 auto_resume = False
 gpu_ids = [0]

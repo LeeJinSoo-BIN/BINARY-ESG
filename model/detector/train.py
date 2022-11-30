@@ -17,9 +17,10 @@ from mmdet.utils import (collect_env, get_device, get_root_logger,
                          update_data_root)
 from mmdet.apis import init_detector, inference_detector
 import pdb
-CONFIG_FILE = 'configs/yolox/BINARY_yolox_x_8x8_300e_coco.py'
-CHECKPOINT_PATH = 'data/pretrain/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth'
-
+#CONFIG_FILE = 'configs/yolox/BINARY_yolox_x_8x8_300e_coco.py'
+#CHECKPOINT_PATH = 'data/pretrain/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth'
+CONFIG_FILE = 'configs/ddod/ddod_r50_fpn_1x_coco.py'
+CHECKPOINT_PATH = 'data/pretrain/ddod_r50_fpn_1x_coco_20220523_223737-29b2fc67.pth'
 def main():       
     
     cfg = Config.fromfile(CONFIG_FILE)
@@ -35,7 +36,7 @@ def main():
 
 
     # work_dir is determined in this priority: CLI > segment in file > filename
-    cfg.work_dir = osp.join('./work_dirs', osp.splitext(osp.basename(CONFIG_FILE))[0])
+    cfg.work_dir = osp.join('./work_dirs/full', osp.splitext(osp.basename(CONFIG_FILE))[0])
     cfg.auto_resume = False
     cfg.gpu_ids = [0]
     distributed = False
@@ -77,30 +78,23 @@ def main():
 
 
     #pdb.set_trace()
-    model = init_detector(cfg, CHECKPOINT_PATH, device='cpu')
+    model = init_detector(cfg, CHECKPOINT_PATH, device='cuda:0')
 
     #pdb.set_trace()
     datasets = [build_dataset(cfg.data.train)]
-
-
-    if len(cfg.workflow) == 2:
-        assert 'val' in [mode for (mode, _) in cfg.workflow]
-        val_dataset = copy.deepcopy(cfg.data.val)
-        val_dataset.pipeline = cfg.data.train.get(
-            'pipeline', cfg.data.train.dataset.get('pipeline'))
-        datasets.append(build_dataset(val_dataset))
+    #import pdb; pdb.set_trace()
+    #cfg.workflow = [('train',1),('val',1)]
+    if len(cfg.workflow) == 2:       
+        datasets.append(build_dataset(cfg.data.val))
     if cfg.checkpoint_config is not None:
         # save mmdet version, config file content and class names in
         # checkpoints as meta data
         cfg.checkpoint_config.meta = dict(
-            mmdet_version=__version__ + get_git_hash()[:7],
+            #mmdet_version=__version__ + get_git_hash()[:7],
             CLASSES=datasets[0].CLASSES)
     # add an attribute for visualization convenience
     model.CLASSES = datasets[0].CLASSES
-    model_dict = model.state_dict()
-    pdb.set_trace()
-    import torch
-    torch.save(model_dict,"data/binary/pretrain/pretrain.pth")
+
     
     train_detector(
         model,

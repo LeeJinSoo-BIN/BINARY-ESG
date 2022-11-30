@@ -53,11 +53,12 @@ class DDODHead(AnchorHead):
         super(DDODHead, self).__init__(num_classes, in_channels, **kwargs)
 
         self.sampling = False
-        if self.train_cfg:
-            self.cls_assigner = build_assigner(self.train_cfg.assigner)
-            self.reg_assigner = build_assigner(self.train_cfg.reg_assigner)
-            sampler_cfg = dict(type='PseudoSampler')
-            self.sampler = build_sampler(sampler_cfg, context=self)
+        self.cls_assigner = build_assigner(dict(type='ATSSAssigner', topk=9, alpha=0.8))
+        
+        self.cls_assigner = build_assigner(dict(type='ATSSAssigner', topk=9, alpha=0.8))
+        self.reg_assigner = build_assigner(dict(type='ATSSAssigner', topk=9, alpha=0.5))
+        sampler_cfg = dict(type='PseudoSampler')
+        self.sampler = build_sampler(sampler_cfg, context=self)
         self.loss_iou = build_loss(loss_iou)
 
     def _init_layers(self):
@@ -690,7 +691,7 @@ class DDODHead(AnchorHead):
         """
         inside_flags = anchor_inside_flags(flat_anchors, valid_flags,
                                            img_meta['img_shape'][:2],
-                                           self.train_cfg.allowed_border)
+                                           -1)
         if not inside_flags.any():
             return (None, ) * 7
         # assign gt and sample anchors
@@ -737,10 +738,10 @@ class DDODHead(AnchorHead):
             else:
                 labels[pos_inds] = gt_labels[
                     sampling_result.pos_assigned_gt_inds]
-            if self.train_cfg.pos_weight <= 0:
+            if -1 <= 0:
                 label_weights[pos_inds] = 1.0
             else:
-                label_weights[pos_inds] = self.train_cfg.pos_weight
+                label_weights[pos_inds] = -1
         if len(neg_inds) > 0:
             label_weights[neg_inds] = 1.0
 

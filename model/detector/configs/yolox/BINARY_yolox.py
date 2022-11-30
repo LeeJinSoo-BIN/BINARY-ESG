@@ -97,14 +97,16 @@ test_pipeline = [
 
 data = dict(
     samples_per_gpu=2,
-    workers_per_gpu=1,
+    workers_per_gpu=4,
     persistent_workers=True,
     train=train_dataset,
     val=dict(
-        type=dataset_type,
-        ann_file=data_root + 'annotations/binary_esg_val.json',
-        img_prefix=data_root + 'val_esg/',
-        pipeline=test_pipeline),
+       type= dataset_type,
+        data_root = data_root,
+        ann_file= 'annotations/binary_esg_train.json',
+        img_prefix= 'train_esg/',
+        pipeline = test_pipeline
+    )
     test=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/binary_esg_val.json',
@@ -125,7 +127,7 @@ optimizer_config = dict(grad_clip=None)
 max_epochs = 300
 num_last_epochs = 15
 resume_from = None
-interval = 10
+interval = 25
 
 # learning policy
 lr_config = dict(
@@ -167,7 +169,7 @@ evaluation = dict(
     interval=interval,
     dynamic_intervals=[(max_epochs - num_last_epochs, 1)],
     metric='bbox')
-log_config = dict(interval=50)
+log_config = dict(interval=24)
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # USER SHOULD NOT CHANGE ITS VALUES.

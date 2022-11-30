@@ -11,16 +11,19 @@ import mmcv
 import numpy as np
 from mmcv.utils import print_log
 from terminaltables import AsciiTable
-from mmdet.core import eval_recalls
 
+from mmdet.core import eval_recalls
 from mmdet.datasets.builder import DATASETS
 from mmdet.datasets.custom import CustomDataset
 from .api_wrappers import COCO, COCOeval
+
+
 @DATASETS.register_module()
 class BINARY_ESG_Dataset(CustomDataset):
 
     CLASSES = ('Empty', 'Away', 'Full')
-    PALETTE = [(220, 20, 60), (119, 11, 32), (0, 0, 142)]
+    PALETTE = [(0, 255, 0), (255, 255, 0), (255, 0, 0)]
+    
     def load_annotations(self, ann_file):
         """Load annotation from COCO style annotation file.
 
