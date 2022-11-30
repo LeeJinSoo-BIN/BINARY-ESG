@@ -1,0 +1,31 @@
+body {
+    background-color: black;
+}
+#title {
+    text-align: center;
+    color: white;
+    border-bottom: 3px solid white;
+    border-top: 3px solid white;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    vertical-align: middle;
+    margin-top: 100px;
+    /*background-color: rgb(91, 91, 218);*/
+}
+
+.title_font {
+    font-family: 'Syncopate';
+    font-weight: 900;
+    font-size: 80px;
+    /*font-family: 'Nanum Gothic', sans-serif;*/
+}
+
+.clickLink {
+    text-align: center;
+    font-size: 100px;
+    text-decoration-line: none;
+    color: white;
+}
+.click {
+    text-align: center;
+}
