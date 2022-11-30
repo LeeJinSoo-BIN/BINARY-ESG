@@ -101,17 +101,19 @@ data = dict(
     persistent_workers=True,
     train=train_dataset,
     val=dict(
-       type= dataset_type,
+        type= dataset_type,
         data_root = data_root,
         ann_file= 'annotations/binary_esg_train.json',
         img_prefix= 'train_esg/',
         pipeline = test_pipeline
-    )
+    ),
     test=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/binary_esg_val.json',
         img_prefix=data_root + 'test_esg/',
-        pipeline=test_pipeline))
+        pipeline=test_pipeline
+        )
+    )
 
 # optimizer
 # default 8 gpu
