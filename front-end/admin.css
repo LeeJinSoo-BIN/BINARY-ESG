@@ -18,6 +18,12 @@ body {
     color: black;
 }
 
+#manager {
+    font-size: medium;
+    margin-left: 10px;
+    margin-top: auto;
+}
+
 .title_font {
     font-family: 'Syncopate';
     font-weight: bold;
