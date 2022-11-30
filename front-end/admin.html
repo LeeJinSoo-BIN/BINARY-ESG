@@ -5,16 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="manager.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate&display=swap" rel="stylesheet">
     <title>자리 안내 서비스</title>
 </head>
 <body>
-    <h1 id="title" class="font">Now U SEAT Me</h1>
-    <div id="gridseatinfo">
-        <p id="seatinfo" class="font">잔여좌석 안내</p>
-        <p class="font"><span style="color:rgb(254, 65, 65)">●</span> 이용중 : <span th:text="${seatNumber.fullSeat}"></span>석</p>
+<div id="title">
+    <h1 class="title_font">Now U SEAT Me <span id="manager">MANAGER</span></h1>
+    
+</div>
+<div id="gridseatinfo">
+    <p id="seatinfo" class="font">잔여좌석 안내</p>
+    <p class="font"><span style="color:rgb(254, 65, 65)">●</span> 이용중 : <span th:text="${seatNumber.fullSeat}"></span>석</p>
     <p class="font"><span style="color:rgb(61, 171, 49)">●</span> 이용 가능 : <span th:text="${seatNumber.emptySeat}"></span>석</p>
     <p class="font"><span style="color:rgb(238, 221, 64)">●</span> 자리 비움 : <span th:text="${seatNumber.awaySeat}"></span>석</p>
-    </div>
+</div>
 <div id="grid_backmap">
     <div>
         <div id="backmap">
@@ -26,7 +34,7 @@
                     <p id="studyroom" class="font">스터디룸</p>
                 </div>
                 <div>
-                    <div id="seats">
+                    <div id="seats" class="button_font">
                         <div th:each="seat : ${seats}" th:switch="${seat.status.toString()}">
 
                             <button th:case="EMPTY" class="seatbutton emptyseat"
@@ -49,19 +57,22 @@
                                     <div class="container">
                                         <h1>자리 상태 변경</h1>
                                         <p>자리 상태를 변경 하시겠습니까?</p>
-
                                         <div class="clearfix">
                                             <button type="button"
                                                     th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
-                                                    th:class="'change-empty' + ${seat.seatNum} + ' emptyseat'">이용 가능으로 변경
+                                                    th:class="'change-empty' + ${seat.seatNum} + ' emptyseatbtn'">이용 가능으로 변경
                                             </button>
                                             <button type="button"
                                                     th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
-                                                    th:class="'change-away' + ${seat.seatNum} + ' helpseat'">자리 비움으로 변경
+                                                    th:class="'change-away' + ${seat.seatNum} + ' helpseatbtn'">자리 비움으로 변경
                                             </button>
                                             <button type="button"
                                                     th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
-                                                    th:class="'change-full' + ${seat.seatNum} + ' usingseat'">이용 중으로 변경
+                                                    th:class="'change-full' + ${seat.seatNum} + ' usingseatbtn'">이용 중으로 변경
+                                            </button>
+                                            <button type="button"
+                                                    th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
+                                                    class="cancelbtn">취소
                                             </button>
                                         </div>
                                     </div>
