@@ -17,10 +17,10 @@ from mmdet.utils import (collect_env, get_device, get_root_logger,
                          update_data_root)
 from mmdet.apis import init_detector, inference_detector
 import pdb
-#CONFIG_FILE = 'configs/yolox/BINARY_yolox_x_8x8_300e_coco.py'
-#CHECKPOINT_PATH = 'data/pretrain/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth'
-CONFIG_FILE = 'configs/ddod/ddod_r50_fpn_1x_coco.py'
-CHECKPOINT_PATH = 'data/pretrain/ddod_r50_fpn_1x_coco_20220523_223737-29b2fc67.pth'
+CONFIG_FILE = 'configs/yolox/yolox_x_8x8_300e_coco.py'
+CHECKPOINT_PATH = 'data/pretrain/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth'
+#CONFIG_FILE = 'configs/ddod/ddod_r50_fpn_1x_coco.py'
+#CHECKPOINT_PATH = 'data/pretrain/ddod_r50_fpn_1x_coco_20220523_223737-29b2fc67.pth'
 def main():       
     
     cfg = Config.fromfile(CONFIG_FILE)
