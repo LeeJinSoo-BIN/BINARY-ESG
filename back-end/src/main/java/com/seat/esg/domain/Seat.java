@@ -2,11 +2,13 @@ package com.seat.esg.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 @Entity
 @Getter @Setter
+@DynamicUpdate
 public class Seat {
 
     @Id @GeneratedValue
@@ -15,7 +17,7 @@ public class Seat {
 
     private int seatNum;
 
-    private int emptyMinute;
+    private int awayMinute;
 
     @Enumerated(EnumType.STRING)
     private SeatStatus status;
@@ -34,31 +36,18 @@ public class Seat {
     public static Seat createSeat(int SeatNum, Place place) {
         Seat seat = new Seat();
         seat.setSeatNum(SeatNum);
-        seat.setEmptyMinute(0);
+        seat.setAwayMinute(0);
         seat.setStatus(SeatStatus.EMPTY);
         seat.setPlace(place);
         return seat;
     }
 
-    //==비즈니스 로직==//
-    /**
-     * 부재중 시간 증가
-     */
-    public void addTime(int time) {
-        this.emptyMinute += time;
+    public int addAwayMinute(int minute) {
+        this.awayMinute += minute;
+        return this.awayMinute;
     }
 
-    /**
-     * 부재중 시간 초기화
-     */
-    public void initTime() {
-        this.emptyMinute = 0;
-    }
-
-    /**
-     * 자리 상태 변경
-     */
-    public void changeStatus(SeatStatus status) {
-        this.status = status;
+    public void initAwayMinute() {
+        this.awayMinute = 0;
     }
 }

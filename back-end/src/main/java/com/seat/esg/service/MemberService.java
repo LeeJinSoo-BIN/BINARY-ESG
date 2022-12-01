@@ -3,7 +3,6 @@ package com.seat.esg.service;
 import com.seat.esg.domain.Member;
 import com.seat.esg.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

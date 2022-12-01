@@ -1,6 +1,5 @@
 package com.seat.esg.controller;
 
-import com.seat.esg.domain.MemberRole;
 import lombok.Getter;
 import lombok.Setter;
 
