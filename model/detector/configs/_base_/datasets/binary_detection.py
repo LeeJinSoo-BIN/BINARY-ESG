@@ -44,8 +44,8 @@ data = dict(
         ]),
     test=dict(
         type='BINARY_ESG_Dataset',
-        ann_file='data/binary/annotations/instances_val2017.json',
-        img_prefix='data/binary/val2017/',
+        ann_file='data/binary/annotations/binary_esg_train.json',
+        img_prefix='data/binary/train_esg/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
