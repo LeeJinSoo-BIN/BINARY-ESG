@@ -16,7 +16,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  mustache:
+    suffix: .html
 
 logging:
   level:
     org.hibernate.sql: debug
+#    org.springframework.web: debug
