@@ -21,6 +21,10 @@ CONFIG_FILE = 'configs/ddod/ddod_r50_fpn_1x_coco.py'
 
 CONFIG_FILE = 'configs/focalnet/mask_rcnn_focalnet_base_patch4_mstrain_480-800_adamw_3x_coco_lrf.py'
 CHECKPOINT_PATH = 'data/pretrain/focalnet_base_lrf_maskrcnn_3x.pth'
+
+CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
+CHECKPOINT_PATH = 'work_dirs/full/focalnet_binary_tiny_sparse_rcnn/epoch_14.pth'
+
 model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cuda:0')  # or device='cuda:0'
 imgs = ['data/binary/train_esg/binary_esg_train_image0100.png','data/binary/train_esg/binary_esg_train_image0030.png','data/binary/train_esg/binary_esg_train_image0050.png']
 root = 'data/binary/test_esg'
