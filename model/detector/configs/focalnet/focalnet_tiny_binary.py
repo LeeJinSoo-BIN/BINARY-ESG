@@ -14,7 +14,7 @@ model = dict(
         use_checkpoint=False,
         focal_windows=[9,9,9,9],        
         focal_levels=[3,3,3,3], 
-        use_conv_embed=False, 
+        use_conv_embed=False
     ),    
     neck=dict(in_channels=[96, 192, 384, 768]),
     rpn_head=dict(
@@ -53,20 +53,7 @@ model = dict(
             reg_class_agnostic=False,
             loss_cls=dict(
                 type='CrossEntropyLoss', use_sigmoid=False, loss_weight=1.0),
-            loss_bbox=dict(type='L1Loss', loss_weight=1.0)),
-        mask_roi_extractor=dict(
-            type='SingleRoIExtractor',
-            roi_layer=dict(type='RoIAlign', output_size=14, sampling_ratio=0),
-            out_channels=256,
-            featmap_strides=[4, 8, 16, 32]),
-        mask_head=dict(
-            type='FCNMaskHead',
-            num_convs=4,
-            in_channels=256,
-            conv_out_channels=256,
-            num_classes=3,
-            loss_mask=dict(
-                type='CrossEntropyLoss', use_mask=True, loss_weight=1.0))),
+            loss_bbox=dict(type='L1Loss', loss_weight=1.0)))
     train_cfg=dict(
         rpn=dict(
             assigner=dict(
@@ -126,7 +113,7 @@ img_norm_cfg = dict(
 
 train_pipeline = [
     dict(type='LoadImageFromFile'),
-    dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+    dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='AutoAugment',
          policies=[
@@ -163,7 +150,7 @@ train_pipeline = [
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels', 'gt_masks']),
 ]
 
-data_root = 'data/coco/'
+data_root = 'data/binary/'
 data = dict(
     samples_per_gpu=1,
     workers_per_gpu=2,
@@ -172,6 +159,29 @@ data = dict(
         ann_file='data/binary/annotations/binary_esg_train.json',
         img_prefix='data/binary/train_esg/',
         pipeline=train_pipeline),
+    val=dict(
+        type='BINARY_ESG_Dataset',
+        ann_file='data/binary/annotations/binary_esg_train.json',
+        img_prefix='data/binary/train_esg/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(1333, 800),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(type='RandomFlip'),
+                    dict(
+                        type='Normalize',
+                        mean=[123.675, 116.28, 103.53],
+                        std=[58.395, 57.12, 57.375],
+                        to_rgb=True),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(type='Collect', keys=['img'])
+                ])
+        ]),
     test=dict(
         type='BINARY_ESG_Dataset',
         ann_file='data/binary/annotations/instances_val2017.json',
@@ -194,8 +204,7 @@ data = dict(
                     dict(type='ImageToTensor', keys=['img']),
                     dict(type='Collect', keys=['img'])
                 ])
-        ]),
-    samples_per_gpu=1,
+        ])
 )
 
 optimizer = dict(_delete_=True, type='AdamW', lr=0.0001, betas=(0.9, 0.999), weight_decay=0.05,

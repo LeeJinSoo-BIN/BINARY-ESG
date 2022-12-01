@@ -56,7 +56,9 @@ train_pipeline = [
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
 ]
-data = dict(train=dict(pipeline=train_pipeline))
+data = dict(train=dict(pipeline=train_pipeline),
+            samples_per_gpu = 2)
 
 lr_config = dict(policy='step', step=[27, 33])
-runner = dict(type='EpochBasedRunner', max_epochs=36)
+runner = dict(type='EpochBasedRunner',
+             max_epochs=36)

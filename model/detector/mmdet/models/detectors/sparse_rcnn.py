@@ -1,10 +1,10 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from ..builder import DETECTORS
-from .two_stage import TwoStageDetector
+from .two_stage_focal import TwoStageDetectorFocalNet
 
 
 @DETECTORS.register_module()
-class SparseRCNN(TwoStageDetector):
+class SparseRCNN(TwoStageDetectorFocalNet):
     r"""Implementation of `Sparse R-CNN: End-to-End Object Detection with
     Learnable Proposals <https://arxiv.org/abs/2011.12450>`_"""
 

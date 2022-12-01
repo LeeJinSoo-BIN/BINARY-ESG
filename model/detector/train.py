@@ -23,8 +23,8 @@ CHECKPOINT_PATH = 'data/pretrain/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.
 #CONFIG_FILE = 'configs/ddod/ddod_r50_fpn_1x_coco.py'
 #CHECKPOINT_PATH = 'data/pretrain/ddod_r50_fpn_1x_coco_20220523_223737-29b2fc67.pth'
 
-CONFIG_FILE = 'configs/focalnet/focalnet_tiny_binary.py'
-CHECKPOINT_PATH = 'data/pretrain/focalnet_tiny_lrf_maskrcnn_3x.pth'
+CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
+CHECKPOINT_PATH = 'data/pretrain/focalnet_tiny_lrf_sparsercnn_3x.pth'
 
 
 def main():       
