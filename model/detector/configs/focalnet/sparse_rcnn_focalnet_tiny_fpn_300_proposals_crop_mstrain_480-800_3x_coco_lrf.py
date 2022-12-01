@@ -4,7 +4,7 @@ num_proposals = 300
 model = dict(
     backbone=dict(
         drop_path_rate=0.3,
-        focal_levels=[3,3,3,3], 
+        focal_levels=[3,3,3,3],
         focal_windows=[11,9,9,7],
         ),    
     rpn_head=dict(num_proposals=num_proposals),
