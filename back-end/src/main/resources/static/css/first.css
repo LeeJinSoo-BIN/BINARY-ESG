@@ -1,0 +1,54 @@
+body {
+    background-color: white;
+}
+#title {
+    text-align: center;
+    color: black;
+    border-bottom: 10px solid black;
+    border-top: 10px solid black;
+    padding-top: 70px;
+    padding-bottom: 70px;
+    vertical-align: middle;
+    margin-top: 15%;
+}
+
+.title_font {
+    font-family: 'Syncopate';
+    font-weight: 900;
+    font-size: 80px;
+}
+.click button:hover {
+    background-color: black;
+    padding: 30px;
+    color: white;
+
+}
+.click {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-align: center;
+}
+
+.font {
+    font-family: 'Syncopate';
+    font-weight: 900;
+    font-size: 50px;
+    color: black;
+    border: 7px solid black;
+    background-color: white;
+    border-radius: 50px;
+    padding: 30px;
+}
+
+a {
+    text-decoration-line: none;
+    color: black;
+    font-family: 'Syncopate';
+}
+a:hover {
+    color: rgb(28, 137, 28);
+}
+
+.madeBy {
+    text-align: center;
+}
