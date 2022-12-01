@@ -41,7 +41,8 @@ from .yolact_head import YOLACTHead, YOLACTProtonet, YOLACTSegmHead
 from .yolo_head import YOLOV3Head
 from .yolof_head import YOLOFHead
 from .yolox_head import YOLOXHead
-
+from .rpn_head_focal import RPNHeadFocalNet
+from .anchor_head_focal import AnchorHeadFocalNet
 __all__ = [
     'AnchorFreeHead', 'AnchorHead', 'GuidedAnchorHead', 'FeatureAdaption',
     'RPNHead', 'GARPNHead', 'RetinaHead', 'RetinaSepBNHead', 'GARetinaHead',
@@ -54,5 +55,5 @@ __all__ = [
     'DETRHead', 'YOLOFHead', 'DeformableDETRHead', 'SOLOHead',
     'DecoupledSOLOHead', 'CenterNetHead', 'YOLOXHead',
     'DecoupledSOLOLightHead', 'LADHead', 'TOODHead', 'MaskFormerHead',
-    'Mask2FormerHead', 'SOLOV2Head', 'DDODHead'
+    'Mask2FormerHead', 'SOLOV2Head', 'DDODHead', 'RPNHeadFocalNet', 'AnchorHeadFocalNet'
 ]

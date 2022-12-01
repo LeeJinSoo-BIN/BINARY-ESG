@@ -2,7 +2,8 @@
 import copy
 import os.path as osp
 import time
-
+import os
+os.environ['CUDA_LAUNCH_BLOCKING'] = "1"
 import mmcv
 from mmcv import Config
 from mmcv.runner import get_dist_info, init_dist
@@ -21,6 +22,11 @@ CONFIG_FILE = 'configs/yolox/yolox_x_8x8_300e_coco.py'
 CHECKPOINT_PATH = 'data/pretrain/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth'
 #CONFIG_FILE = 'configs/ddod/ddod_r50_fpn_1x_coco.py'
 #CHECKPOINT_PATH = 'data/pretrain/ddod_r50_fpn_1x_coco_20220523_223737-29b2fc67.pth'
+
+CONFIG_FILE = 'configs/focalnet/focalnet_tiny_binary.py'
+CHECKPOINT_PATH = 'data/pretrain/focalnet_tiny_lrf_maskrcnn_3x.pth'
+
+
 def main():       
     
     cfg = Config.fromfile(CONFIG_FILE)
@@ -77,10 +83,10 @@ def main():
 
 
 
-    #pdb.set_trace()
+    
     model = init_detector(cfg, CHECKPOINT_PATH, device='cuda:0')
 
-    #pdb.set_trace()
+    
     datasets = [build_dataset(cfg.data.train)]
     #import pdb; pdb.set_trace()
     #cfg.workflow = [('train',1),('val',1)]
@@ -95,7 +101,7 @@ def main():
     # add an attribute for visualization convenience
     model.CLASSES = datasets[0].CLASSES
 
-    
+    pdb.set_trace()
     train_detector(
         model,
         datasets,

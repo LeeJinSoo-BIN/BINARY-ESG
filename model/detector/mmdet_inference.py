@@ -18,14 +18,9 @@ CONFIG_FILE = 'configs/yolox/BINARY_yolox_x_8x8_300e_coco.py'
 CHECKPOINT_PATH = 'work_dirs/full/BINARY_yolox_x_8x8_300e_coco/epoch_25.pth'
 CHECKPOINT_PATH = 'work_dirs/full/ddod_r50_fpn_1x_coco/epoch_12.pth'
 CONFIG_FILE = 'configs/ddod/ddod_r50_fpn_1x_coco.py'
-#CHECKPOINT_PATH = 'data/pretrain/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth'
-#import pdb; pdb.set_trace()
-#s_dict = torch.load(CHECKPOINT_PATH)
-#es = s_dict['state_dict']
-# model = init_detector(CONFIG_FILE device='cuda:0')
-# model.load_state_dict(es)
-# pdb.set_trace()
 
+CONFIG_FILE = 'configs/focalnet/mask_rcnn_focalnet_base_patch4_mstrain_480-800_adamw_3x_coco_lrf.py'
+CHECKPOINT_PATH = 'data/pretrain/focalnet_base_lrf_maskrcnn_3x.pth'
 model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cuda:0')  # or device='cuda:0'
 imgs = ['data/binary/train_esg/binary_esg_train_image0100.png','data/binary/train_esg/binary_esg_train_image0030.png','data/binary/train_esg/binary_esg_train_image0050.png']
 root = 'data/binary/test_esg'
