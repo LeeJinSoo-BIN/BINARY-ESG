@@ -1,6 +1,5 @@
 package com.seat.esg.repository;
 
-import com.seat.esg.domain.Member;
 import com.seat.esg.domain.Seat;
 import com.seat.esg.domain.SeatStatus;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +31,11 @@ public class SeatRepository {
         return em.createQuery("select s from Seat s where s.status = :status", Seat.class)
                 .setParameter("status", status)
                 .getResultList();
+    }
+
+    public Seat findOneBySeatNum(int seatNum) {
+        return em.createQuery("select s from Seat s where s.seatNum = :seatNum", Seat.class)
+                .setParameter("seatNum", seatNum)
+                .getSingleResult();
     }
 }
