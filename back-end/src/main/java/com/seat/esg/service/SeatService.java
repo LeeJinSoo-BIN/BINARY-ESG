@@ -15,22 +15,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeatService {
 
-    private int cycle = 5;
+    private final int cycle = 5;
 
     private final SeatRepository seatRepository;
     private final MessageService messageService;
 
-    @Transactional
-    public void saveSeat(Seat seat) {
-        seatRepository.save(seat);
-    }
-
     public List<Seat> findSeats() {
         return seatRepository.findAll();
-    }
-
-    public Seat findOne(Long seatId) {
-        return seatRepository.findOne(seatId);
     }
 
     public SeatNumber countSeatNumber() {
