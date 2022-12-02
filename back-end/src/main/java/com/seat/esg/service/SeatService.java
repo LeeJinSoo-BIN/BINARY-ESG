@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SeatService {
 
-    private final int cycle = 5;
+    private int cycle = 5;
 
     private final SeatRepository seatRepository;
     private final MessageService messageService;
@@ -69,6 +69,15 @@ public class SeatService {
                 seat.setStatus(SeatStatus.AWAY);
             } else {
                 seat.setStatus(SeatStatus.FULL);
+            }
+        } else if (nowStatus == null) {
+            if (seat.getAwayMinute() > 0) {
+                int awayMinute = seat.addAwayMinute(cycle);
+                if (awayMinute > 30) {
+                    seat.setStatus(SeatStatus.AWAY);
+                } else {
+                    seat.setStatus(SeatStatus.FULL);
+                }
             }
         } else {
             seat.initAwayMinute();
