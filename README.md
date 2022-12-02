@@ -18,25 +18,27 @@
 오른쪽의 링크를 통해 다운로드 가능 --
 [다운로드 링크](https://drive.google.com/drive/folders/1oitvIpHet7atcvQY0g3Xx4U4xmP1Xmzh?usp=share_link)
 
-2. git clone <br>
+2. 사전학습 모델 다운로드 --
+[다운로드 링크](https://drive.google.com/file/d/1Bz1a2DGd0IfnLQquAkWJBorITRpq3xbs/view?usp=share_link)
+
+3. git clone <br>
 ```git clone https://github.com/LeeJinSoo-BIN/BINARY-ESG.git```
 
-3. 아래의 코드를 통해 필요한 라이브러리 추가 설치(pip가 설치되어있다고 가정)<br>
+4. 아래의 코드를 통해 필요한 라이브러리 추가 설치(pip가 설치되어있다고 가정)<br>
 ```setup.sh``` (window)<br>
  ```sh setup.sh``` (linux)
 
-
-4. 아래의 코드를 통해 flask를 실행 <br>
+5. 아래의 코드를 통해 flask를 실행 <br>
 ```python3 model/detector/binary_esg_flask.py```
 
-5. 아래의 코드를 통해 H2를 실행 후 사진처럼 JDBC URL 정보 설정 후 연결 <br>
+6. 아래의 코드를 통해 H2를 실행 후 사진처럼 JDBC URL 정보 설정 후 연결 <br>
 ```DB/h2/bin/h2.sh``` (window)<br>
  ```sh DB/h2/bin/h2.sh``` (linux)
 
 	<img src="DB/h2_info.png" width="300"/>
 <br>
 
-6. clone 받은 폴더 안의 ```back-end``` 폴더를 spring boot를 통해 Open 후 ```ESGApplication``` 실행
+7. clone 받은 폴더 안의 ```back-end``` 폴더를 spring boot를 통해 Open 후 ```ESGApplication``` 실행
 
 <br>
 
