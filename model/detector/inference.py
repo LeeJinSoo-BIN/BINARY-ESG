@@ -23,13 +23,13 @@ CONFIG_FILE = 'configs/focalnet/mask_rcnn_focalnet_base_patch4_mstrain_480-800_a
 CHECKPOINT_PATH = 'data/pretrain/focalnet_base_lrf_maskrcnn_3x.pth'
 
 CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
-CHECKPOINT_PATH = 'work_dirs/full/focalnet_binary_tiny_sparse_rcnn/epoch_14.pth'
+CHECKPOINT_PATH = 'data/pretrain/focal_sparse_rcnn_epoch_17.pth'
 
-model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cuda:0')  # or device='cuda:0'
+model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cpu')  # or device='cuda:0'
 imgs = ['data/binary/train_esg/binary_esg_train_image0100.png','data/binary/train_esg/binary_esg_train_image0030.png','data/binary/train_esg/binary_esg_train_image0050.png']
 root = 'data/binary/test_esg'
-img_name = os.listdir(root)
-imgs = [os.path.join(root,img) for img in img_name]
+#img_name = os.listdir(root)
+#imgs = [os.path.join(root,img) for img in img_name]
 results = inference_detector(model, imgs)
 pdb.set_trace()
 
