@@ -32,8 +32,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .antMatchers("/", "/account/register", "/css/**", "/js/**").permitAll()
-                        .anyRequest().authenticated()
+                        .antMatchers("/manager").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin((form) -> form
                         .loginPage("/account/login")
@@ -72,7 +72,6 @@ public class SecurityConfig {
             throws Exception {
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
-//                .passwordEncoder(passwordEncoder())
                 .usersByUsernameQuery("select name,password,enabled "
                         + "from member "
                         + "where name = ?")

@@ -25,6 +25,7 @@ class TwoStageDetector(BaseDetector):
                  pretrained=None,
                  init_cfg=None):
         super(TwoStageDetector, self).__init__(init_cfg)
+        
         if pretrained:
             warnings.warn('DeprecationWarning: pretrained is deprecated, '
                           'please use "init_cfg" instead')

@@ -99,8 +99,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-data/
-data
 .vscode
 .idea
 .DS_Store
@@ -124,4 +122,22 @@ work_dirs/
 *.mp4
 
 /model/detector/data/*
+/model/detector/data/binary/*
+!/model/detector/data/binary
 
+/model/detector/data/pretrain/*
+!/model/detector/data/pretrain
+!/model/detector/data/pretrain/readme.md
+
+
+/model/detector/data/binary/annotations/*
+!/model/detector/data/binary/annotations
+!/model/detector/data/binary/annotations/readme.md
+
+/model/detector/data/binary/cctv_esg/*
+!/model/detector/data/binary/cctv_esg
+!/model/detector/data/binary/cctv_esg/readme.md
+
+/model/detector/data/binary/train_esg/*
+!/model/detector/data/binary/train_esg
+!/model/detector/data/binary/train_esg/readme.md
