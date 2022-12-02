@@ -19,7 +19,7 @@ public class RequestService {
     private final ObjectMapper objectMapper;
     private final SeatService seatService;
 
-    @Scheduled(cron = "0 0/5 9-22 ? * MON-FRI")
+    @Scheduled(cron = "0/30 * 9-22 ? * MON-FRI")
     public void requestToFlask() throws IOException {
         String test = flaskController.responseFromFlask();
         ResponseFlaskForm responseFlaskForm = objectMapper.readValue(test, ResponseFlaskForm.class);

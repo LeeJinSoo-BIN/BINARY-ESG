@@ -2,13 +2,13 @@ import json
 import numpy as np
 from mmdet.apis import init_detector, inference_detector
 from flask import Flask, jsonify, request
-
+import os
 CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
 CHECKPOINT_PATH = 'data/pretrain/focal_sparse_rcnn_epoch_17.pth'
+ROOT = 'data/binary/cctv_esg'
+model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cuda:0')  # or device='cuda:0'
 
-model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cpu')  # or device='cuda:0'
-
-binary_esg_flask = Flask(__name__)
+#binary_esg_flask = F1lask(__name__)
 
 def bb_intersection_over_union(boxA, boxB):
 	xA = max(boxA[0], boxB[0])
@@ -44,32 +44,43 @@ def nms(bboxes, iou_threshold, threshold=0):
 
 
 
-@binary_esg_flask.route('/predict', methods=['POST'])
+#@binary_esg_flask.route('/predict')
 def predict():
-    if request.method == 'POST':
-        imgs = ['data/binary/cctv_esg/test_001.jpg','data/binary/cctv_esg/test_002.jpg','data/binary/cctv_esg/test_003.jpg']
-        results = inference_detector(model, imgs)
-        new_results = [[] for num in range(len(results))]
-        for num in range(len(results)):      
-            for i in range(3): 
-                for j in range(len(results[i])):
-                    new_results[num].append(np.append(results[num][i][j], np.array([i])))
+    
+    
+    img_name = os.listdir(ROOT)
+    imgs = [os.path.join(ROOT,img) for img in img_name if 'png' in img or 'jpg' in img]
+    results = inference_detector(model, imgs)
+    new_results = [[] for num in range(len(results))]
+    import pdb; pdb.set_trace()
+    for num in range(len(results)):      
+        for i in range(3):
+            for j in range(len(results[i])):
+                new_results[num].append(np.append(results[num][i][j], np.array([i])))
+    import pdb; pdb.set_trace()
+    bbox = []
+    for i in range(len(results)):
+        bbox.append(nms(new_results[i], 0.15, 0.2))
+    print(len(bbox)) # debugging
 
-        bbox = []
-        for i in range(len(results)):
-            bbox.append(nms(new_results[i], 0.15, 0.2))
-        print(len(bbox)) # debugging
-  
 
     status_list = ['EMPTY', 'AWAY', 'FULL']
     json_list = {'status': []}
     # return info: {'status' : ['EMPTY', 'FULL', 'AWAY', …]}
-
-    for seat in sorted(bbox[0], key=lambda x:((x[3] - x[1] / 2), (x[2] - x[0]) / 2)):
+    '''
+    {
+        '1' : 'EMPTY',
+        '2' : 'NONE',
+        ...
+        '6' : 'AWAY'
+    }
+    '''
+    for seat in sorted(new_results[0], key=lambda x:((x[3] - x[1] / 2), (x[2] - x[0]) / 2)):
         json_list['status'].append(status_list[int(seat[5])])
     
     return json.dumps(json_list)
 
 
 if __name__ == '__main__':
-    binary_esg_flask.run()
+    predict()
+    #binary_esg_flask.run()

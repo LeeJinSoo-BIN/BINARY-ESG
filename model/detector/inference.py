@@ -24,10 +24,10 @@ CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
 CHECKPOINT_PATH = 'data/pretrain/focal_sparse_rcnn_epoch_17.pth'
 
 model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cpu')  # or device='cuda:0'
-imgs = ['data/binary/train_esg/binary_esg_train_image0100.png','data/binary/train_esg/binary_esg_train_image0030.png','data/binary/train_esg/binary_esg_train_image0050.png']
-root = 'data/binary/test_esg'
-#img_name = os.listdir(root)
-#imgs = [os.path.join(root,img) for img in img_name]
+root = 'data/binary/debug_seg'
+img_name = os.listdir(root)
+imgs = [os.path.join(root,img) for img in img_name if 'md' not in img]
+import pdb; pdb.set_trace()
 results = inference_detector(model, imgs)
 
 folder = "work_dirs/debug/" +CONFIG_FILE.split('/')[-1][:-3]
