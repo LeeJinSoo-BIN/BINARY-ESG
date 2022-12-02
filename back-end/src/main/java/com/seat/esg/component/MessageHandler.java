@@ -1,18 +1,23 @@
 package com.seat.esg.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.seat.esg.controller.FlaskController;
 import com.seat.esg.form.RequestMessageForm;
 import com.seat.esg.domain.SeatStatus;
+import com.seat.esg.form.ResponseFlaskForm;
 import com.seat.esg.service.MessageService;
 import com.seat.esg.service.SeatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,6 +30,7 @@ public class MessageHandler extends TextWebSocketHandler {
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private final MessageService messageService;
     private final SeatService seatService;
+    private final FlaskController flaskController;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -67,5 +73,25 @@ public class MessageHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session.getId(), session);
+    }
+
+    @Scheduled(cron = "0/30 * 9-22 ? * MON-FRI")
+    public void requestToFlask() throws IOException {
+        String test = flaskController.responseFromFlask();
+        ResponseFlaskForm responseFlaskForm = objectMapper.readValue(test, ResponseFlaskForm.class);
+        List<String> status = responseFlaskForm.getStatus();
+
+        for (int i = 0; i < seatService.findSeats().size() || i < status.size(); i++) {
+            SeatStatus seatStatus = seatService.changeStringStatusToEnum(status.get(i));
+            seatService.updateStatus(i + 1, seatStatus);
+        }
+
+        sessions.forEach((sessionId, sessionInMap) -> {
+            try {
+                sessionInMap.sendMessage(new TextMessage(""));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
