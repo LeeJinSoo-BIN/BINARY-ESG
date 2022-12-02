@@ -101,6 +101,5 @@ def predict():
     
     
     return json.dumps(final_seat)
-if __name__ == '__main__':
-    predict()
+if __name__ == '__main__':    
     binary_esg_flask.run()
