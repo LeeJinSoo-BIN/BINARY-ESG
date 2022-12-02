@@ -12,11 +12,9 @@ body {
 #title {
     text-align: center;
     border-bottom: 5px solid black;
-    border-top: 5px solid black;
-    padding-top: 20px;
+    padding-top: 50px;
     padding-bottom: 20px;
     margin-bottom:0px;
-    margin-top: 30px;
     color: black;
 }
 
@@ -129,10 +127,10 @@ body {
 
 #seatinfo {
     text-align: center;
-    padding-top: 15px;
     border-right: 1px solid black;
     border-radius: 10px;
     margin: 0;
+    padding-top: 15px;
     color: white;
     background-color: rgba(0, 0, 0, 30%);
 }

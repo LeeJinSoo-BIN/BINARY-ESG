@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 public class FlaskController {
 
     public String responseFromFlask(){
-        String url = "http://127.0.0.1:5000/predict";
+        String url = "http://127.0.0.1:5000/toSpring";
         String sb = "";
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
