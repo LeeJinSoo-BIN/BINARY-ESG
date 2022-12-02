@@ -81,7 +81,7 @@ public class MessageHandler extends TextWebSocketHandler {
         ResponseFlaskForm responseFlaskForm = objectMapper.readValue(test, ResponseFlaskForm.class);
         List<String> status = responseFlaskForm.getStatus();
 
-        for (int i = 0; i < status.size(); i++) {
+        for (int i = 0; i < seatService.findSeats().size() || i < status.size(); i++) {
             SeatStatus seatStatus = seatService.changeStringStatusToEnum(status.get(i));
             seatService.updateStatus(i + 1, seatStatus);
         }
