@@ -23,8 +23,8 @@ CHECKPOINT_PATH = 'work_dirs/full/BINARY_yolox_x_8x8_300e_coco/epoch_275.pth'
 CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
 CHECKPOINT_PATH = 'data/pretrain/focal_sparse_rcnn_epoch_17.pth'
 
-model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cpu')  # or device='cuda:0'
-root = 'data/binary/debug_seg'
+model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cuda:0')  # or device='cuda:0'
+root = 'data/binary/cctv_esg'
 img_name = os.listdir(root)
 imgs = [os.path.join(root,img) for img in img_name if 'md' not in img]
 import pdb; pdb.set_trace()
@@ -56,7 +56,7 @@ for _, (img_path, result) in enumerate(zip(imgs, results)) :
     imglists.append(imglist)        
 
 
-
+import pdb; pdb.set_trace()
 for i, img_path in enumerate(imgs):
     img_name = img_path.split('/')[-1]    
     for ii, img in enumerate(imglists[i]) :      

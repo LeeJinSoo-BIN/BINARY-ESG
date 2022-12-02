@@ -3,27 +3,29 @@ import numpy as np
 from mmdet.apis import init_detector, inference_detector
 from flask import Flask, jsonify, request
 import os
+from collections import Counter
 CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
 CHECKPOINT_PATH = 'data/pretrain/focal_sparse_rcnn_epoch_17.pth'
 ROOT = 'data/binary/cctv_esg'
+NUM_SEAT = 6
 model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cuda:0')  # or device='cuda:0'
 
-#binary_esg_flask = F1lask(__name__)
+binary_esg_flask = Flask(__name__)
 
 def bb_intersection_over_union(boxA, boxB):
-	xA = max(boxA[0], boxB[0])
-	yA = max(boxA[1], boxB[1])
-	xB = min(boxA[2], boxB[2])
-	yB = min(boxA[3], boxB[3])
-	
-	interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
+   xA = max(boxA[0], boxB[0])
+   yA = max(boxA[1], boxB[1])
+   xB = min(boxA[2], boxB[2])
+   yB = min(boxA[3], boxB[3])
+   
+   interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
 
-	boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
-	boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
+   boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
+   boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
 
-	iou = interArea / float(boxAArea + boxBArea - interArea)
+   iou = interArea / float(boxAArea + boxBArea - interArea)
 
-	return iou
+   return iou
 
 def nms(bboxes, iou_threshold, threshold=0):
 
@@ -44,43 +46,61 @@ def nms(bboxes, iou_threshold, threshold=0):
 
 
 
-#@binary_esg_flask.route('/predict')
+@binary_esg_flask.route('/predict')
 def predict():
     
     
     img_name = os.listdir(ROOT)
     imgs = [os.path.join(ROOT,img) for img in img_name if 'png' in img or 'jpg' in img]
     results = inference_detector(model, imgs)
-    new_results = [[] for num in range(len(results))]
-    import pdb; pdb.set_trace()
+    new_results = [[] for _ in range(len(results))]
+    
     for num in range(len(results)):      
         for i in range(3):
-            for j in range(len(results[i])):
+            for j in range(len(results[num][i])):
                 new_results[num].append(np.append(results[num][i][j], np.array([i])))
-    import pdb; pdb.set_trace()
+        
+    
     bbox = []
     for i in range(len(results)):
         bbox.append(nms(new_results[i], 0.15, 0.2))
     print(len(bbox)) # debugging
-
-
-    status_list = ['EMPTY', 'AWAY', 'FULL']
-    json_list = {'status': []}
-    # return info: {'status' : ['EMPTY', 'FULL', 'AWAY', …]}
-    '''
-    {
-        '1' : 'EMPTY',
-        '2' : 'NONE',
-        ...
-        '6' : 'AWAY'
-    }
-    '''
-    for seat in sorted(new_results[0], key=lambda x:((x[3] - x[1] / 2), (x[2] - x[0]) / 2)):
-        json_list['status'].append(status_list[int(seat[5])])
     
-    return json.dumps(json_list)
-
-
+    
+    for i in range(len(bbox)):
+        bbox[i].sort( key=lambda x:-x[3])
+    
+    seats = [[] for _ in range(NUM_SEAT)]
+    for box in bbox :
+        for i in range(0, NUM_SEAT, 2) :
+            if box[i][0] > box[i+1][0] :
+                seats[i].append(int(box[i][5]))
+                seats[i+1].append(int(box[i+1][5]))
+            else :
+                seats[i].append(int(box[i+1][5]))
+                seats[i+1].append(int(box[i][5]))
+    
+    status_list = ['EMPTY', 'AWAY', 'FULL']
+    final_seat = {'status': []}
+    for seat in seats :
+        final_seat['status'].append(status_list[Counter(seat).most_common(n=1)[0][0]])
+        
+    # return info: {'status' : ['EMPTY', 'FULL', 'AWAY', …] #seat}
+    
+    
+    '''  
+    import cv2
+    img = cv2.imread(imgs[0])
+    colors = [(0,0,0),(0,255,0),(0,255,255),(0,0,255)]
+    for box in bbox[0]:
+        xmin, ymin, xmax, ymax, _, cls = map(int, box)
+        cv2.rectangle(img, (xmin, ymin),(xmax,ymax),colors[cls+1])
+    pdb.set_trace()
+    cv2.imwrite('check.png',img)
+    '''
+    
+    
+    return json.dumps(final_seat)
 if __name__ == '__main__':
     predict()
-    #binary_esg_flask.run()
+    binary_esg_flask.run()
