@@ -15,12 +15,10 @@ config_file = 'configs/ddod/ddod_r50_fpn_1x_coco.py'
 checkpoint_file = 'ddod_r50_fpn_1x_coco_20220523_223737-29b2fc67.pth'
 
 CONFIG_FILE = 'configs/yolox/BINARY_yolox_x_8x8_300e_coco.py'
-CHECKPOINT_PATH = 'work_dirs/full/BINARY_yolox_x_8x8_300e_coco/epoch_25.pth'
-CHECKPOINT_PATH = 'work_dirs/full/ddod_r50_fpn_1x_coco/epoch_12.pth'
-CONFIG_FILE = 'configs/ddod/ddod_r50_fpn_1x_coco.py'
+CHECKPOINT_PATH = 'work_dirs/full/BINARY_yolox_x_8x8_300e_coco/epoch_275.pth'
 
-CONFIG_FILE = 'configs/focalnet/mask_rcnn_focalnet_base_patch4_mstrain_480-800_adamw_3x_coco_lrf.py'
-CHECKPOINT_PATH = 'data/pretrain/focalnet_base_lrf_maskrcnn_3x.pth'
+
+
 
 CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
 CHECKPOINT_PATH = 'data/pretrain/focal_sparse_rcnn_epoch_17.pth'
@@ -31,16 +29,14 @@ root = 'data/binary/test_esg'
 #img_name = os.listdir(root)
 #imgs = [os.path.join(root,img) for img in img_name]
 results = inference_detector(model, imgs)
-pdb.set_trace()
 
-colors = [(0,0,0),(0,255,0),(0,255,255),(0,0,255)]
-
-#for i, class_ in enumerate(model.CLASSES):
-    #print(i, class_)
+folder = "work_dirs/debug/" +CONFIG_FILE.split('/')[-1][:-3]
+if not os.path.isdir(folder):
+    os.makedirs(folder)
 
 import cv2
 
-
+colors = [(0,0,0),(0,255,0),(0,255,255),(0,0,255)]
 thres_hold = [0.0, 0.2, 0.3 ,0.4, 0.5, 0.6]
 imglists = []
 for _, (img_path, result) in enumerate(zip(imgs, results)) :    
@@ -60,11 +56,11 @@ for _, (img_path, result) in enumerate(zip(imgs, results)) :
     imglists.append(imglist)        
 
 
-pdb.set_trace()
+
 for i, img_path in enumerate(imgs):
     img_name = img_path.split('/')[-1]    
-    for ii, img in enumerate(imglists[i]) :        
-        cv2.imwrite("work_dirs/debug/"+img_name[:-4]+"th"+str(thres_hold[ii])+".png", img)
+    for ii, img in enumerate(imglists[i]) :      
+        cv2.imwrite(folder+'/'+img_name[:-4]+"th"+str(thres_hold[ii])+".png", img)
 
 #cv2.imwrite("wow.png",img)
-#show_result_pyplot(model,img_ori,result,score_thr=0.3)
+#show_result_pyplot(model,imgs,results,score_thr=0.3)
