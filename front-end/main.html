@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/home.css"/>
+    <link rel="stylesheet" href="home.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
@@ -15,10 +15,12 @@
 <body>
 <h1 id="title" class="title_font">Now U SEAT Me</h1>
 <div id="gridseatinfo">
-    <p id="seatinfo" class="font">잔여좌석 안내</p>
-    <p class="font"><span style="color:red">●</span> 이용중 : <span th:text="${seatNumber.fullSeat}"></span>석</p>
-    <p class="font"><span style="color:greenyellow">●</span> 이용 가능 : <span th:text="${seatNumber.emptySeat}"></span>석</p>
-    <p class="font"><span style="color:yellow">●</span> 자리 비움 : <span th:text="${seatNumber.awaySeat}"></span>석</p>
+    <div id="seatinfo">
+        <p class="font">잔여좌석 안내</p>
+    </div>
+    <p class="font"><span style="color:rgb(254, 65, 65)">●</span> 이용중 : <span th:text="${seatNumber.fullSeat}"></span>석</p>
+    <p class="font"><span style="color:rgb(61, 171, 49)">●</span> 이용 가능 : <span th:text="${seatNumber.emptySeat}"></span>석</p>
+    <p class="font"><span style="color:rgb(238, 221, 64)">●</span> 자리 비움 : <span th:text="${seatNumber.awaySeat}"></span>석</p>
 </div>
 <div id="backmap">
     <div id="window">
