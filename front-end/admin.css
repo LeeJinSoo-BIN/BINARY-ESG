@@ -12,9 +12,11 @@ body {
 #title {
     text-align: center;
     border-bottom: 5px solid black;
-    padding-top: 50px;
+    border-top: 5px solid black;
+    padding-top: 20px;
     padding-bottom: 20px;
     margin-bottom:0px;
+    margin-top: 30px;
     color: black;
 }
 
@@ -25,6 +27,7 @@ body {
 }
 
 .title_font {
+    margin: 0px;
     font-family: 'Syncopate';
     font-weight: bold;
 }
