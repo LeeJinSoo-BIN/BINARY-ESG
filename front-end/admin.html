@@ -14,14 +14,19 @@
 </head>
 <body>
 <div id="title">
-    <h1 class="title_font"><a href="https://github.com/LeeJinSoo-BIN/BINARY-ESG"style="color:white; font-size: medium; margin-right: 10px; text-decoration-line: none;">MANAGER</a> NOW U SEAT Me <span id="manager">MANAGER</span></h1>
-    
+    <h1 class="title_font"><a href="https://github.com/LeeJinSoo-BIN/BINARY-ESG"
+                              style="color:white; font-size: medium; margin-right: 10px; text-decoration-line: none;">MANAGER</a>
+        NOW U SEAT Me <span id="manager">MANAGER</span></h1>
+
 </div>
 <div id="gridseatinfo">
     <p id="seatinfo" class="font">잔여좌석 안내</p>
-    <p class="font"><span style="color:rgb(254, 65, 65)">●</span> 이용중 : <span th:text="${seatNumber.fullSeat}"></span>석</p>
-    <p class="font"><span style="color:rgb(61, 171, 49)">●</span> 이용 가능 : <span th:text="${seatNumber.emptySeat}"></span>석</p>
-    <p class="font"><span style="color:rgb(238, 221, 64)">●</span> 자리 비움 : <span th:text="${seatNumber.awaySeat}"></span>석</p>
+    <p class="font"><span style="color:rgb(254, 65, 65)">●</span> 이용중 : <span th:text="${seatNumber.fullSeat}"></span>석
+    </p>
+    <p class="font"><span style="color:rgb(61, 171, 49)">●</span> 이용 가능 : <span
+            th:text="${seatNumber.emptySeat}"></span>석</p>
+    <p class="font"><span style="color:rgb(238, 221, 64)">●</span> 자리 비움 : <span
+            th:text="${seatNumber.awaySeat}"></span>석</p>
 </div>
 <div id="grid_backmap">
     <div>
@@ -60,15 +65,18 @@
                                         <div class="clearfix">
                                             <button type="button"
                                                     th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
-                                                    th:class="'change-empty' + ${seat.seatNum} + ' emptyseatbtn'">이용 가능으로 변경
+                                                    th:class="'change-empty' + ${seat.seatNum} + ' emptyseatbtn'">이용
+                                                가능으로 변경
                                             </button>
                                             <button type="button"
                                                     th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
-                                                    th:class="'change-away' + ${seat.seatNum} + ' helpseatbtn'">자리 비움으로 변경
+                                                    th:class="'change-away' + ${seat.seatNum} + ' helpseatbtn'">자리 비움으로
+                                                변경
                                             </button>
                                             <button type="button"
                                                     th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
-                                                    th:class="'change-full' + ${seat.seatNum} + ' usingseatbtn'">이용 중으로 변경
+                                                    th:class="'change-full' + ${seat.seatNum} + ' usingseatbtn'">이용 중으로
+                                                변경
                                             </button>
                                             <button type="button"
                                                     th:onclick="'document.getElementById(\'id' + ${seat.seatNum} + '\').style.display=\'none\''"
