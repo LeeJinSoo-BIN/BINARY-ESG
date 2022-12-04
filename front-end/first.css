@@ -9,7 +9,7 @@ body {
     padding-top: 70px;
     padding-bottom: 70px;
     vertical-align: middle;
-    margin-top: 270px;
+    margin-top: 15%;
     /*background-color: rgb(91, 91, 218);*/
 }
 
@@ -26,7 +26,8 @@ body {
     
 }
 .click {
-    margin-top: 100px;
+    margin-top: 5%;
+    margin-bottom: 5%;
     text-align: center;
 }
 
@@ -51,6 +52,5 @@ a:hover {
 }
 
 .madeBy {
-    margin-top: 100px;
     text-align: center;
 }
