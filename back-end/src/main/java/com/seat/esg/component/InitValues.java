@@ -24,7 +24,6 @@ public class InitValues {
         member.setPassword(passwordEncoder.encode("123"));
         member.setRole(MemberRole.MANAGER);
         memberService.join(member);
-        System.out.println(1);
     }
 
 
