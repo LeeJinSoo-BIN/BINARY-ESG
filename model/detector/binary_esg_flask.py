@@ -1,31 +1,36 @@
 import json
 import numpy as np
+from cv2 import VideoCapture, imwrite, resize
+from os import path, makedirs
+from os.path import isdir
 from mmdet.apis import init_detector, inference_detector
 from flask import Flask, jsonify, request
 import os
 from collections import Counter
+import time
 CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
 CHECKPOINT_PATH = 'data/pretrain/focal_sparse_rcnn_epoch_17.pth'
 ROOT = 'data/binary/cctv_esg'
 NUM_SEAT = 6
-model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cuda:0')  # or device='cuda:0'
+NUM_FRAME = 7
 
+model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cuda:0')  # or device='cuda:0'
 binary_esg_flask = Flask(__name__)
 
 def bb_intersection_over_union(boxA, boxB):
-   xA = max(boxA[0], boxB[0])
-   yA = max(boxA[1], boxB[1])
-   xB = min(boxA[2], boxB[2])
-   yB = min(boxA[3], boxB[3])
-   
-   interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
+    xA = max(boxA[0], boxB[0])
+    yA = max(boxA[1], boxB[1])
+    xB = min(boxA[2], boxB[2])
+    yB = min(boxA[3], boxB[3])
 
-   boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
-   boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
+    interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
 
-   iou = interArea / float(boxAArea + boxBArea - interArea)
+    boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
+    boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
 
-   return iou
+    iou = interArea / float(boxAArea + boxBArea - interArea)
+
+    return iou
 
 def nms(bboxes, iou_threshold, threshold=0):
 
@@ -44,17 +49,35 @@ def nms(bboxes, iou_threshold, threshold=0):
     return bboxes_after_nmn
 
 
-
-
 @binary_esg_flask.route('/predict')
 def predict():
     
+    print("start predcit")
+    start_time = time.time()
+    cctv_img = []
+    print("load cctv")
+    vidcap = VideoCapture('data/binary/cctv_esg/cctv.mp4')
+    while 1:
+        success,image = vidcap.read()
+        if not success:
+            break    
+        cctv_img.append(resize(image,(640,640)))
     
-    img_name = os.listdir(ROOT)
-    imgs = [os.path.join(ROOT,img) for img in img_name if 'png' in img or 'jpg' in img]
+    cctv_img = np.split(np.array(cctv_img)[:-(len(cctv_img)%NUM_FRAME)],NUM_FRAME)
+    imgs = []
+    for i in range(NUM_FRAME) :
+        imgs.append(cctv_img[i][-1])
+        imwrite('check%d.png'%i,imgs[i])
+    del cctv_img
+
+    #img_name = os.listdir(ROOT)
+    #imgs = [os.path.join(ROOT,img) for img in img_name if 'png' in img or 'jpg' in img]
+
+    print("inference detector")   
     results = inference_detector(model, imgs)
-    new_results = [[] for _ in range(len(results))]
-    
+
+    print("NMS")
+    new_results = [[] for _ in range(len(results))]    
     for num in range(len(results)):      
         for i in range(3):
             for j in range(len(results[num][i])):
@@ -99,7 +122,10 @@ def predict():
     cv2.imwrite('check.png',img)
     '''
     
-    
-    return json.dumps(final_seat)
+    rst = json.dumps(final_seat)
+    print(rst)
+    end_time = time.time()
+    print('in %.4fsec'%(end_time - start_time))
+    return rst
 if __name__ == '__main__':    
     binary_esg_flask.run('0.0.0.0')
