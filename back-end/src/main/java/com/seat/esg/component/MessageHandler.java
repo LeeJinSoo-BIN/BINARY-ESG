@@ -40,7 +40,6 @@ public class MessageHandler extends TextWebSocketHandler {
     }
 
     @Override
-    @Transactional
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String msg = message.getPayload();
 
