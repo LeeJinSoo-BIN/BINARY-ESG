@@ -25,7 +25,7 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String home(Model model) throws Exception {
+    public String home(Model model) {
         makeSeatData(model);
         return "home";
     }
@@ -33,7 +33,7 @@ public class HomeController {
     @GetMapping("/manager")
     public String manager(Model model) {
         makeSeatData(model);
-        makeMassegeData(model);
+        makeMessageData(model);
         return "manager";
     }
 
@@ -44,7 +44,7 @@ public class HomeController {
         model.addAttribute("seatNumber", seatNumber);
     }
 
-    private void makeMassegeData(Model model) {
+    private void makeMessageData(Model model) {
         List<Message> messages = messageService.findMessages();
         model.addAttribute("messages", messages);
     }
