@@ -56,6 +56,9 @@ def predict():
     start_time = time.time()
     cctv_img = []
     print("load cctv")
+    if not os.path.isfile('data/binary/cctv_esg/cctv.mp4'):
+        print("no cctv video")
+        return json.dumps({'status': ["None","None","None","None","None","None"]})
     vidcap = VideoCapture('data/binary/cctv_esg/cctv.mp4')
     while 1:
         success,image = vidcap.read()
