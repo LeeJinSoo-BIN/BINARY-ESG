@@ -8,7 +8,7 @@ CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
 CHECKPOINT_PATH = 'data/pretrain/focal_sparse_rcnn_epoch_17.pth'
 ROOT = 'data/binary/cctv_esg'
 NUM_SEAT = 6
-model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cpu')  # or device='cuda:0'
+model = init_detector(CONFIG_FILE, CHECKPOINT_PATH, device='cuda:0')  # or device='cuda:0'
 
 binary_esg_flask = Flask(__name__)
 
@@ -63,7 +63,7 @@ def predict():
     
     bbox = []
     for i in range(len(results)):
-        bbox.append(nms(new_results[i], 0.15, 0.2))
+        bbox.append(nms(new_results[i], 0.15, 0.1))
     print(len(bbox)) # debugging
     
     
@@ -102,4 +102,4 @@ def predict():
     
     return json.dumps(final_seat)
 if __name__ == '__main__':    
-    binary_esg_flask.run()
+    binary_esg_flask.run('0.0.0.0')
