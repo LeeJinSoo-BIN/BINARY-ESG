@@ -142,39 +142,39 @@ work_dirs/
 !/model/detector/data/binary/train_esg/readme.md
 
 
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+/back-end/.gradle
+/back-end/build/
+/back-end/!gradle/wrapper/gradle-wrapper.jar
+/back-end/!**/src/main/**/build/
+/back-end/!**/src/test/**/build/
 
 ### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+/back-end/.apt_generated
+/back-end/.classpath
+/back-end/.factorypath
+/back-end/.project
+/back-end/.settings
+/back-end/.springBeans
+/back-end/.sts4-cache
+/back-end/bin/
+/back-end/!**/src/main/**/bin/
+/back-end/!**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+/back-end/.idea
+/back-end/*.iws
+/back-end/*.iml
+/back-end/*.ipr
+/back-end/out/
+/back-end/!**/src/main/**/out/
+/back-end/!**/src/test/**/out/
 
 ### NetBeans ###
-/nbproject/private/
+/back-end/nbproject/private/
 /nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+/back-end/dist/
+/back-end/nbdist/
+/back-end/.nb-gradle/
 
 ### VS Code ###
-.vscode/
+/back-end/.vscode/
