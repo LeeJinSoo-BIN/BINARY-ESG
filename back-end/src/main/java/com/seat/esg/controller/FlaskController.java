@@ -18,17 +18,14 @@ public class FlaskController {
         String sb = "";
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-            System.out.println("연결 완료!!!");
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
 
             String line = null;
 
-            while ((line = br.readLine()) != null) {
-                sb = sb + line + "\n";
+            if ((line = br.readLine()) != null) {
+                sb = line;
             }
-
-            System.out.println("sb = " + sb);
 
             br.close();
 
@@ -36,7 +33,6 @@ public class FlaskController {
             System.out.println("연결 실패!!!");
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return sb;
