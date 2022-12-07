@@ -20,6 +20,10 @@ public class SeatService {
     private final SeatRepository seatRepository;
     private final MessageService messageService;
 
+    public Seat findSeat(int seatNum) {
+        return seatRepository.findOneBySeatNum(seatNum);
+    }
+
     public List<Seat> findSeats() {
         return seatRepository.findAll();
     }

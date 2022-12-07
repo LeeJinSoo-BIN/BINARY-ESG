@@ -2,6 +2,7 @@ package com.seat.esg.component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seat.esg.controller.FlaskController;
+import com.seat.esg.domain.Seat;
 import com.seat.esg.form.RequestMessageForm;
 import com.seat.esg.domain.SeatStatus;
 import com.seat.esg.form.ResponseFlaskForm;
@@ -44,6 +45,7 @@ public class MessageHandler extends TextWebSocketHandler {
         RequestMessageForm requestMessageForm = objectMapper.readValue(msg, RequestMessageForm.class);
         int seatNum = requestMessageForm.getSeatNum();
         String messageType = requestMessageForm.getMessageType();
+        Seat seat = seatService.findSeat(seatNum);
 
         switch (messageType) {
             case "REQUEST":
@@ -51,12 +53,14 @@ public class MessageHandler extends TextWebSocketHandler {
                 break;
             case "CHANGE-EMPTY":
                 seatService.changeSeatStatus(seatNum, SeatStatus.EMPTY);
+                seat.initAwayMinute();
                 break;
             case "CHANGE-AWAY":
                 seatService.changeSeatStatus(seatNum, SeatStatus.AWAY);
                 break;
             case "CHANGE-FULL":
                 seatService.changeSeatStatus(seatNum, SeatStatus.FULL);
+                seat.initAwayMinute();
                 break;
         }
 
