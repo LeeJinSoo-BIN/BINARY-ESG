@@ -1,15 +1,15 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from ..builder import DETECTORS
-from .two_stage import TwoStageDetector
+from .two_stage_focal import TwoStageDetectorFocalNet
 
 
 @DETECTORS.register_module()
-class SparseRCNN(TwoStageDetector):
+class SparseRCNNFocalNet(TwoStageDetectorFocalNet):
     r"""Implementation of `Sparse R-CNN: End-to-End Object Detection with
     Learnable Proposals <https://arxiv.org/abs/2011.12450>`_"""
 
     def __init__(self, *args, **kwargs):
-        super(SparseRCNN, self).__init__(*args, **kwargs)
+        super(SparseRCNNFocalNet, self).__init__(*args, **kwargs)
         assert self.with_rpn, 'Sparse R-CNN and QueryInst ' \
             'do not support external proposals'
 

@@ -3,6 +3,7 @@ import copy
 import os.path as osp
 import time
 import os
+import torch
 os.environ['CUDA_LAUNCH_BLOCKING'] = "1"
 import mmcv
 from mmcv import Config
@@ -25,10 +26,11 @@ CHECKPOINT_PATH = 'data/pretrain/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.
 
 CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
 CHECKPOINT_PATH = 'data/pretrain/focalnet_tiny_lrf_sparsercnn_3x.pth'
-
+CHECKPOINT_PATH = 'data/pretrain/focal_sparse_rcnn_epoch_17.pth'
 
 def main():       
-    
+    chpt = torch.load(CHECKPOINT_PATH)
+    import pdb; pdb.set_trace()
     cfg = Config.fromfile(CONFIG_FILE)
     # replace the ${key} with the value of cfg.key
     cfg = replace_cfg_vals(cfg)
@@ -85,7 +87,7 @@ def main():
 
     
     model = init_detector(cfg, CHECKPOINT_PATH, device='cuda:0')
-
+    #model = build_detector(cfg.model, train_cfg=cfg.get('train_cfg'), test_cfg=cfg.get('test_cfg'))
     
     datasets = [build_dataset(cfg.data.train)]
     #import pdb; pdb.set_trace()

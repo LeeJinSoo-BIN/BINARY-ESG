@@ -5,7 +5,7 @@ _base_ = [
 num_stages = 6
 num_proposals = 100
 model = dict(
-    type='SparseRCNNFocalNet',
+    type='SparseRCNN',
     pretrained=None, 
     backbone=dict(
         type='FocalNet',
@@ -98,4 +98,4 @@ optimizer_config = dict(_delete_=True, grad_clip=dict(max_norm=1, norm_type=2))
 # learning policy
 lr_config = dict(policy='step', step=[8, 11])
 runner = dict(type='EpochBasedRunner', max_epochs=36)
-log_config = dict(interval=30, hooks=[dict(type='TextLoggerHook')])
+log_config = dict(interval=1, hooks=[dict(type='TextLoggerHook')])

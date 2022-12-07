@@ -46,7 +46,9 @@ from .yolof import YOLOF
 from .yolox import YOLOX
 from .mask_rcnn_focal import MaskRCNNFocalNet
 from .two_stage_focal import TwoStageDetectorFocalNet
+from .sparse_rcnn_focal import SparseRCNNFocalNet
 from .single_stage_yolox import SingleStageDetectorYolox
+
 
 __all__ = [
     'ATSS', 'BaseDetector', 'SingleStageDetector', 'TwoStageDetector', 'RPN',
@@ -58,5 +60,5 @@ __all__ = [
     'SOLOv2', 'DeformableDETR', 'AutoAssign', 'YOLOF', 'CenterNet', 'YOLOX',
     'TwoStagePanopticSegmentor', 'PanopticFPN', 'QueryInst', 'LAD', 'TOOD',
     'MaskFormer', 'DDOD', 'Mask2Former',
-    'MaskRCNNFocalNet', 'SingleStageDetectorYolox', 'TwoStageDetectorFocalNet'
+    'MaskRCNNFocalNet', 'SingleStageDetectorYolox', 'TwoStageDetectorFocalNet', 'SparseRCNNFocalNet'
 ]

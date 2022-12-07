@@ -214,13 +214,13 @@ class CustomDataset(Dataset):
                 True).
         """
 
-        if self.test_mode:
+        if self.test_mode:            
             return self.prepare_test_img(idx)
         while True:
             data = self.prepare_train_img(idx)
             if data is None:
                 idx = self._rand_another(idx)
-                continue
+                continue           
             return data
 
     def prepare_train_img(self, idx):

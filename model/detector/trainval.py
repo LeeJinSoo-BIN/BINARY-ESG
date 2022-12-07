@@ -2,7 +2,8 @@
 import copy
 import os.path as osp
 import time
-
+import os
+os.environ['CUDA_LAUNCH_BLOCKING'] = "1"
 import mmcv
 from mmcv import Config
 from mmcv.runner import get_dist_info, init_dist
@@ -10,12 +11,12 @@ from mmcv.utils import get_git_hash
 
 from mmdet import __version__
 from mmdet.apis import init_random_seed, set_random_seed, train_detector
-from mmdet.datasets import build_dataset, build_dataloader
+from mmdet.datasets import build_dataset
 from mmdet.models import build_detector
 from mmdet.utils import (collect_env, get_device, get_root_logger,
                          replace_cfg_vals, setup_multi_processes,
                          update_data_root)
-from mmdet.apis import init_detector, inference_detector, single_gpu_test
+from mmdet.apis import init_detector, inference_detector
 import pdb
 CONFIG_FILE = 'configs/yolox/yolox_x_8x8_300e_coco.py'
 CHECKPOINT_PATH = 'data/pretrain/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.pth'
@@ -23,7 +24,7 @@ CHECKPOINT_PATH = 'data/pretrain/yolox_x_8x8_300e_coco_20211126_140254-1ef88d67.
 #CHECKPOINT_PATH = 'data/pretrain/ddod_r50_fpn_1x_coco_20220523_223737-29b2fc67.pth'
 
 CONFIG_FILE = 'configs/focalnet/focalnet_binary_tiny_sparse_rcnn.py'
-CHECKPOINT_PATH = 'work_dirs/full/focalnet_binary_tiny_sparse_rcnn/epoch_17.pth'
+CHECKPOINT_PATH = 'data/pretrain/focalnet_tiny_lrf_sparsercnn_3x.pth'
 
 
 def main():       
@@ -82,81 +83,34 @@ def main():
 
 
 
-    pdb.set_trace()
-    cfg.model.train_cfg = None
-    model = build_detector(cfg.model, test_cfg=cfg.get('test_cfg'))
+    
+    model = init_detector(cfg, CHECKPOINT_PATH, device='cuda:0')
+    #model = build_detector(cfg.model, train_cfg=cfg.get('train_cfg'), test_cfg=cfg.get('test_cfg'))
+    
+    datasets = [build_dataset(cfg.data.train)]
+    #import pdb; pdb.set_trace()
+    cfg.workflow = [('train',1),('val',1)]
+    if len(cfg.workflow) == 2:       
+        datasets.append(build_dataset(cfg.data.val))
+    if cfg.checkpoint_config is not None:
+        # save mmdet version, config file content and class names in
+        # checkpoints as meta data
+        cfg.checkpoint_config.meta = dict(
+            #mmdet_version=__version__ + get_git_hash()[:7],
+            CLASSES=datasets[0].CLASSES)
+    # add an attribute for visualization convenience
+    model.CLASSES = datasets[0].CLASSES
 
     pdb.set_trace()
-    datasets = build_dataset(cfg.data.test)
+    train_detector(
+        model,
+        datasets,
+        cfg,
+        distributed=distributed,
+        validate=True
+        timestamp=timestamp,
+        meta=meta)
 
-
-    test_dataloader_default_args = dict(
-        samples_per_gpu=1,
-        workers_per_gpu=2,
-        dist=distributed,
-        shuffle=False)    
-    test_loader_cfg = {
-        **test_dataloader_default_args,
-        **cfg.data.get('test_dataloader', {})
-    }
-
-    data_loader = build_dataloader(datasets, **test_loader_cfg)
-
-    '''
-    train_dataloader_default_args = dict(
-        samples_per_gpu=2,
-        workers_per_gpu=1,
-        # `num_gpus` will be ignored if distributed
-        num_gpus=len(cfg.gpu_ids),
-        dist=distributed,
-        seed=cfg.seed,
-        persistent_workers=False)
-
-    train_loader_cfg = {
-        **train_dataloader_default_args,
-        **cfg.data.get('train_dataloader', {})
-    }
-
-    data_loader = build_dataloader(datasets, **train_loader_cfg)
-    '''
-    results = single_gpu_test(model, data_loader, show= True, out_dir=cfg.work_dir)
-    pdb.set_trace()
-
-
-    '''or img, 
-    model.module.show_result(
-                    img_show,
-                    result[i],
-                    bbox_color=PALETTE,
-                    text_color=PALETTE,
-                    mask_color=PALETTE,
-                    show=show,
-                    out_file=out_file,
-                    score_thr=show_score_thr)
-    '''
-
-
-    if rank == 0:
-        if args.out:
-            print(f'\nwriting results to {args.out}')
-            mmcv.dump(outputs, args.out)
-        kwargs = {} if args.eval_options is None else args.eval_options
-        if args.format_only:
-            dataset.format_results(outputs, **kwargs)
-        if args.eval:
-            eval_kwargs = cfg.get('evaluation', {}).copy()
-            # hard-code way to remove EvalHook args
-            for key in [
-                    'interval', 'tmpdir', 'start', 'gpu_collect', 'save_best',
-                    'rule', 'dynamic_intervals'
-            ]:
-                eval_kwargs.pop(key, None)
-            eval_kwargs.update(dict(metric=args.eval, **kwargs))
-            metric = dataset.evaluate(outputs, **eval_kwargs)
-            print(metric)
-            metric_dict = dict(config=args.config, metric=metric)
-            if args.work_dir is not None and rank == 0:
-                mmcv.dump(metric_dict, json_file)
 
 
 
