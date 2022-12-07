@@ -54,15 +54,13 @@ public class MessageHandler extends TextWebSocketHandler {
                 messageService.createAwayRequestMessage(seatNum);
                 break;
             case "CHANGE-EMPTY":
-                seatService.changeSeatStatus(seatNum, SeatStatus.EMPTY);
-                seat.initAwayMinute();
+                seatService.updateSeatStatus(seatNum, SeatStatus.EMPTY);
                 break;
             case "CHANGE-AWAY":
-                seatService.changeSeatStatus(seatNum, SeatStatus.AWAY);
+                seatService.updateSeatStatus(seatNum, SeatStatus.AWAY);
                 break;
             case "CHANGE-FULL":
-                seatService.changeSeatStatus(seatNum, SeatStatus.FULL);
-                seat.initAwayMinute();
+                seatService.updateSeatStatus(seatNum, SeatStatus.FULL);
                 break;
         }
 
@@ -90,7 +88,7 @@ public class MessageHandler extends TextWebSocketHandler {
 
         for (int i = 0; i < seatService.findSeats().size() || i < status.size(); i++) {
             SeatStatus seatStatus = seatService.changeStringStatusToEnum(status.get(i));
-            seatService.updateStatus(i + 1, seatStatus);
+            seatService.updateStatusByNowStatus(i + 1, seatStatus);
         }
 
         sessions.forEach((sessionId, sessionInMap) -> {

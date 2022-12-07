@@ -37,8 +37,11 @@ public class SeatService {
     }
 
     @Transactional
-    public void changeSeatStatus(int seatNum, SeatStatus status) {
+    public void updateSeatStatus(int seatNum, SeatStatus status) {
         Seat seat = seatRepository.findOneBySeatNum(seatNum);
+        if (!(status == SeatStatus.AWAY)) {
+            seat.initAwayMinute();
+        }
         seat.setStatus(status);
         messageService.deleteClearSeatMessage(seatNum);
     }
@@ -56,7 +59,7 @@ public class SeatService {
     }
 
     @Transactional
-    public void updateStatus(int seatNum, SeatStatus nowStatus) {
+    public void updateStatusByNowStatus(int seatNum, SeatStatus nowStatus) {
         Seat seat = seatRepository.findOneBySeatNum(seatNum);
         if (nowStatus == SeatStatus.AWAY) {
             int awayMinute = seat.addAwayMinute(cycle);
