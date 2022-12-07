@@ -18,6 +18,7 @@ public class FlaskController {
         String sb = "";
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            System.out.println("연결 완료!!!");
 
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
 
@@ -27,9 +28,12 @@ public class FlaskController {
                 sb = sb + line + "\n";
             }
 
+            System.out.println("sb = " + sb);
+
             br.close();
 
         } catch (MalformedURLException e) {
+            System.out.println("연결 실패!!!");
             e.printStackTrace();
         } catch (IOException e) {
             // TODO Auto-generated catch block

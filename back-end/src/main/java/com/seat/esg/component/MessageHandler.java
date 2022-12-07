@@ -75,7 +75,8 @@ public class MessageHandler extends TextWebSocketHandler {
         sessions.remove(session.getId(), session);
     }
 
-    @Scheduled(cron = "0/30 * 9-22 ? * MON-FRI")
+//    @Scheduled(cron = "0/30 * 9-22 ? * MON-FRI")
+    @Scheduled(cron = "0/30 * * ? * MON-FRI")
     public void requestToFlask() throws IOException {
         String test = flaskController.responseFromFlask();
         ResponseFlaskForm responseFlaskForm = objectMapper.readValue(test, ResponseFlaskForm.class);
